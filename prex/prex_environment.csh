@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/tcsh -f
 
 #set pvdb enviroment
 

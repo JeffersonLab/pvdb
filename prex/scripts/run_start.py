@@ -24,14 +24,14 @@ import epics_helper
 
 """
 Update script at run start
-
+controlSessions.xml
 Things to consider for the future:
 1) adding interprocess_lock: to avoid duplicated records and ensure only one such process is running
 
 """
 
 # Test flag, it will print out parse result but no udpate to DB
-test_mode = True
+test_mode = False
 
 def get_usage():
     return """
