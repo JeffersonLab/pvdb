@@ -50,8 +50,77 @@ def get_run_conds():
 
     return conditions
 
+def get_end_run_conds(run):
+    # This is being used for run_end.py
+    conditions = {}
+
+    start_time_str = datetime.strftime(run.start_time, "%Y-%m-%d %H:%M:%S")
+    if run.end_time is not None: 
+        end_time_str = datetime.strftime(run.end_time, "%Y-%m-%d %H:%M:%S")
+    else:
+        now_time = datetime.now()
+        end_time_str = now_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    for epics_name, cond_name in epics_list.iteritems():
+        # skip period when APEXPOS was not available 
+        if cond_name == "target_encoder" and start_time_str < "2019-02-18 08:00:00":
+            continue
+
+        # Get average beam current
+        if "current" in cond_name:
+            try:
+                cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "1:80", "-l", epics_name]
+                cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)
+                n = 0
+                for line in cond_out.stdout:
+                    n += 1
+                    if n == 1:    # skip header
+                        continue
+                    tokens = line.strip().split()
+                    if len(tokens) < 3:
+                        continue
+                    key = tokens[0]
+                    value = tokens[2]
+                    if value == "N/A":
+                        value = 0
+                    if key == epics_name:
+                        conditions[cond_name] = value
+            except Exception as ex:
+                conditions["beam_current"] = "-999"
+        else:
+            # checking conditions again at the end (mainly consistency check)
+            try:
+                cmds = ["myget", "-c", epics_name, "-t", end_time_str]
+                cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)                    
+
+                for line in cond_out.stdout:
+                    value = line.strip().split()[2]
+                    if cond_name == "ihwp":
+                        if value == "1":
+                            conditions[cond_name] = "IN"
+                        else:
+                            conditions[cond_name] = "OUT"
+                    elif cond_name == "helicity_pattern":
+                        if value == "1":
+                            conditions[cond_name] = "Quartet"
+                        elif value == "2":
+                            conditions[cond_name] = "Octet"
+                        else:
+                            conditions[cond_name] = "-999" # undefined
+                    else:
+                        conditions[cond_name] = value
+            except Exception as e:
+                conditions[cond_name] = "-999"
+
+    # Get target type condition
+    if start_time_str > "2019-02-18 08:00:00":
+        conditions["target_type"] = get_target_name(conditions["target_encoder"])
+
+    return conditions
+
 def mya_get_run_conds(run, log):
-    
+
+    # get epics information using start_time
     conditions = {}
 
     start_time_str = datetime.strftime(run.start_time, "%Y-%m-%d %H:%M:%S")
