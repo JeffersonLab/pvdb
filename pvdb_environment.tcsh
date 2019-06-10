@@ -21,9 +21,10 @@ else
 endif
 setenv PATH "$RCDB_HOME":"$RCDB_HOME/bin":"$RCDB_HOME/cpp/bin":$PATH
 
-# PREX specific
+# PREX environment
 setenv PYTHONPATH "$PREX_DIR":$PYTHONPATH
 
+# connection string
 if (! $?RCDB_CONNECTION ) then
-    setenv RCDB_CONNECTION mysql://apcoda@hcrcdb.jlab.org:3306/pvdb
+    setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
 endif
