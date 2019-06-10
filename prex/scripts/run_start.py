@@ -40,10 +40,10 @@ def get_usage():
     minimal:
     run_start.py <session_xml_file>
     
-    run_start.py <session_xml_file> -c <db_connection_string> --update=coda,epics --reason=[start, update, end]
+    run_start.py <session_xml_file> -c <db_connection_string> --update=coda,epics --reason=[start, update, end] --exp=PREX2
     
     example:
-    run_start.py controlSessions.xml
+    run_start.py controlSessions.xml --exp=PREX2
     
     <db_connection_string> - is optional. But if it is not set, RCDB_CONNECTION environment variable should be set
 
@@ -63,7 +63,9 @@ def parse_start_run_info():
     parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
     parser.add_argument("--update", help="Comma separated, modules to update such as coda,epics", default="coda")
     parser.add_argument("--reason", help="Reason of the udpate: 'start', 'udpate', 'end' or ''", default="start")
+    parser.add_argument("--exp", help="Experiment name", default="PREX2")
     parser.add_argument("-c", "--connection", help="connection string (eg, mysql://pvdb@localhost/pvdb)")
+
     args = parser.parse_args()
 
     # Set log level
@@ -120,10 +122,14 @@ def parse_start_run_info():
     if bool(dict_info["comment"]["text"]):
         coda_parse_result.user_comment = dict_info["comment"]["text"]
 
+    # Set experiment name
+    coda_parse_result.experiment_name = args.exp
+
     # Coda conditions to DB
     if "coda" in update_parts:
         log.debug(Lf("Adding coda conditions to DB", ))
         if test_mode:
+            print "Experiment name:\t", coda_parse_result.experiment_name
             print "Run number:\t", coda_parse_result.run_number
             print "Start time:\t", coda_parse_result.start_time
             print "Run config:\t", coda_parse_result.run_config
@@ -208,6 +214,10 @@ def update_parity_coda_conditions(context, parse_result):
     run = db.create_run(parse_result.run_number)
 
     conditions = []
+
+    # Experiment name
+    if parse_result.experiment_name is not None:
+        conditions.append((ParityConditions.EXPERIMENT, parse_result.experiment_name))
 
     # Run type condition
     if parse_result.run_type is not None:

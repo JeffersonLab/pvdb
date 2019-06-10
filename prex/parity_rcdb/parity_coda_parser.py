@@ -26,6 +26,7 @@ class ParityCodaRunLogParseResult(object):
         self.coda_session = None         # session name
         self.coda_last_file = None       # Last data filename
         self.coda_files_count = None     # Number of coda data files
+        self.experiment_name = None      # Experiment name
 
 def parity_configs(config_id):
     if config_id > 3:
