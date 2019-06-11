@@ -18,6 +18,9 @@ class ParityConditions(object):
     HELICITY_FREQUENCY = 'helicity_frequency'
     HELICITY_PATTERN = 'helicity_pattern'
     EXPERIMENT = 'experiment'
+    BAD_RUN_FLAG = 'bad_run_flag'
+    BAD_RUN_REASON = 'bad_run_reason'
+    SL_COMMENT = 'sl_comment'
 
 def create_condition_types(db):
     """
@@ -48,3 +51,6 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.HELICITY_PATTERN, ConditionType.STRING_FIELD, "helicity pattern")
     create_condition_type(ParityConditions.HELICITY_FREQUENCY, ConditionType.FLOAT_FIELD, "helicity board frequency in Hz")
     create_condition_type(ParityConditions.EXPERIMENT, ConditionType.STRING_FIELD, "experiment name")
+    create_condition_type(ParityConditions.BAD_RUN_FLAG, ConditionType.INT_FIELD, "bad run flag default 0 means good")
+    create_condition_type(ParityConditions.BAD_RUN_REASON, ConditionType.STRING_FIELD, "reason for bad run mark")
+    create_condition_type(ParityConditions.SL_COMMENT, ConditionType.STRING_FIELD, "additional comment for the run")

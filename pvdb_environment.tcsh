@@ -27,6 +27,8 @@ setenv PYTHONPATH "$PREX_DIR":$PYTHONPATH
 
 # connection string
 setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
+# Test DB
+#setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/pvdb
 
 #if (! $?RCDB_CONNECTION ) then
 #    setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
