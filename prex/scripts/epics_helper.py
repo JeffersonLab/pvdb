@@ -56,7 +56,8 @@ def get_end_run_conds(run):
 
     start_time_str = datetime.strftime(run.start_time, "%Y-%m-%d %H:%M:%S")
     if run.end_time is not None: 
-        end_time_str = datetime.strftime(run.end_time, "%Y-%m-%d %H:%M:%S")
+#        end_time_str = datetime.strftime(run.end_time, "%Y-%m-%d %H:%M:%S")
+        end_time_str = run.end_time
     else:
         now_time = datetime.now()
         end_time_str = now_time.strftime("%Y-%m-%d %H:%M:%S")
@@ -69,7 +70,7 @@ def get_end_run_conds(run):
         # Get average beam current
         if "current" in cond_name:
             try:
-                cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "1:80", "-l", epics_name]
+                cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "0:80", "-l", epics_name]
                 cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)
                 n = 0
                 for line in cond_out.stdout:
@@ -88,27 +89,31 @@ def get_end_run_conds(run):
             except Exception as ex:
                 conditions["beam_current"] = "-999"
         else:
-            # checking conditions again at the end (mainly consistency check)
+            # get epics info 
+            # to check conditions again at the end (mainly consistency check)
             try:
                 cmds = ["myget", "-c", epics_name, "-t", end_time_str]
                 cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)                    
 
                 for line in cond_out.stdout:
                     value = line.strip().split()[2]
-                    if cond_name == "ihwp":
-                        if value == "1":
-                            conditions[cond_name] = "IN"
-                        else:
-                            conditions[cond_name] = "OUT"
-                    elif cond_name == "helicity_pattern":
-                        if value == "1":
-                            conditions[cond_name] = "Quartet"
-                        elif value == "2":
-                            conditions[cond_name] = "Octet"
-                        else:
-                            conditions[cond_name] = "-999" # undefined
+                    if "<<" in value:
+                        conditions[cond_name] = "-999"
                     else:
-                        conditions[cond_name] = value
+                        if cond_name == "ihwp":
+                            if value == "1":
+                                conditions[cond_name] = "IN"
+                            else:
+                                conditions[cond_name] = "OUT"
+                        elif cond_name == "helicity_pattern":
+                            if value == "1":
+                                conditions[cond_name] = "Quartet"
+                            elif value == "2":
+                                conditions[cond_name] = "Octet"
+                            else:
+                                conditions[cond_name] = "-999" # undefined
+                        else:
+                            conditions[cond_name] = value
             except Exception as e:
                 conditions[cond_name] = "-999"
 
@@ -158,20 +163,23 @@ def mya_get_run_conds(run, log):
 
                 for line in cond_out.stdout:
                     value = line.strip().split()[2]
-                    if cond_name == "ihwp":
-                        if value == "1":
-                            conditions[cond_name] = "IN"
-                        else:
-                            conditions[cond_name] = "OUT"
-                    elif cond_name == "helicity_pattern":
-                        if value == "1":
-                            conditions[cond_name] = "Quartet"
-                        elif value == "2":
-                            conditions[cond_name] = "Octet"
-                        else:
-                            conditions[cond_name] = "-999" # undefined
+                    if "<<" in value:
+                        conditions[cond_name] = "-999"
                     else:
-                        conditions[cond_name] = value
+                        if cond_name == "ihwp":
+                            if value == "1":
+                                conditions[cond_name] = "IN"
+                            else:
+                                conditions[cond_name] = "OUT"
+                        elif cond_name == "helicity_pattern":
+                            if value == "1":
+                                conditions[cond_name] = "Quartet"
+                            elif value == "2":
+                                conditions[cond_name] = "Octet"
+                            else:
+                                conditions[cond_name] = "-999" # undefined
+                        else:
+                            conditions[cond_name] = value
             except Exception as e:
                 log.warn(Lf("Error in epics request : '{}',{}'", cond_name, e))
                 conditions[cond_name] = "-999"
@@ -254,7 +262,6 @@ def update_db_conds(db, run, reason):
     log.debug("Commited to DB. End of update_db_conds()")
 
     return conditions
-
 
 if __name__ == "__main__":
     # check if it would have caget available 
