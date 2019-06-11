@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Wrapper script for pvdb udpate at the end of a run
+
+run_num=$1
+
+PVDB_DIR=$HOME/pvdb/prex/scripts
+RNUMFILE=$HOME/datafile/rcRunNumber
+
+if [[ -z $1 ]] ; then
+    run_num=`cat $RNUMFILE`
+fi     
+
+# check if connection string is set
+if [[ -z "$RCDB_CONNECTION" ]]; then
+    echo "PVDB connection string is not set" 
+else
+    # Arguments are set to --update=coda --reason=start by default
+    python ${PVDB_DIR}/run_end.py $1
+fi

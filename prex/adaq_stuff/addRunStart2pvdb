@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Wrapper script for pvdb udpate at the start of a run
+
+PVDB_DIR=$HOME/pvdb/prex/scripts
+SESSION_FILE=${COOL_HOME}/parity/controlSessions.xml
+     
+# check if connection string is set
+if [[ -z "$RCDB_CONNECTION" ]]; then
+    echo "PVDB connection string is not set" 
+else
+    # Arguments are set to --update=coda --reason=start by default
+    python ${PVDB_DIR}/run_start.py ${SESSION_FILE}
+fi
