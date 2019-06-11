@@ -8,6 +8,7 @@ set PREX_DIR=$HOME/pvdb/prex
 if ( ! $?RCDB_HOME ) then
     setenv RCDB_HOME $RCDB_DIR
 endif
+
 if (! $?LD_LIBRARY_PATH) then
     setenv LD_LIBRARY_PATH $RCDB_HOME/cpp/lib
 else
@@ -25,6 +26,8 @@ setenv PATH "$RCDB_HOME":"$RCDB_HOME/bin":"$RCDB_HOME/cpp/bin":$PATH
 setenv PYTHONPATH "$PREX_DIR":$PYTHONPATH
 
 # connection string
-if (! $?RCDB_CONNECTION ) then
-    setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
-endif
+setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
+
+#if (! $?RCDB_CONNECTION ) then
+#    setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
+#endif

@@ -75,7 +75,7 @@ def parse_end_run_info(run_number):
 
     # rough estimation of total charge = run length * average beam current
     charge = float(total_run_time.total_seconds()) * float(epics_conditions["beam_current"])
-    print epics_conditions["beam_current"], total_run_time.total_seconds()
+    epics_conditions["total_charge"] = charge
 
     if test_mode:
         print("Run Start time:\t %s" % run.start_time)
@@ -104,6 +104,7 @@ def parse_end_run_info(run_number):
         db.add_conditions(run, conditions, replace=True)
         db.session.commit()
 
+        now_clock = time.clock()
         db.add_log_record("", 
                           "End of udpate. Script proc clocks='{}', wall time: '{}', datetime: '{}'"
                           .format(now_clock - script_start_clock,
