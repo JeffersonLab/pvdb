@@ -2,6 +2,7 @@ import os
 import logging
 import xml.etree.ElementTree as Et
 from subprocess import check_output
+import subprocess
 from datetime import datetime
 
 from rcdb.log_format import BraceMessage as Lf
@@ -263,3 +264,11 @@ def runinfo_parser():
                 ddict[fd][group] = var
 
     return ddict
+
+def GetTotalEvents():
+    nevts=None
+    DPSH="/adaqfs/home/apar/scripts/printRunStatus"
+    cmds = [DPSH, 'EB1']
+    cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE).stdout.read().strip()
+    nevts = cond_out.split()[2]
+    return nevts
