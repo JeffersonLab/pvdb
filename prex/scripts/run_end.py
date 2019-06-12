@@ -9,6 +9,7 @@ import glob
 
 #parity
 from parity_rcdb import ParityConditions
+from parity_rcdb import parity_coda_parser
 import epics_helper
 
 #rcdb
@@ -64,6 +65,8 @@ def parse_end_run_info(run_number):
 
     run.end_time = end_time_str
 
+    nevts = parity_coda_parser.GetTotalEvents()
+
     # FIXME: total number of events? (maybe add at the end of prompt analysis)
 
     # epics info: consistency check and update
@@ -77,10 +80,18 @@ def parse_end_run_info(run_number):
     charge = float(total_run_time.total_seconds()) * float(epics_conditions["beam_current"])
     epics_conditions["total_charge"] = charge
 
+    if nevts is None:
+        nevts = -1
+        event_rate = -1
+    else:
+        event_rate = float(nevts) / float(total_run_time.total_seconds())
+
     if test_mode:
         print("Run Start time:\t %s" % run.start_time)
         print("Run End time:\t %s" % run.end_time)
         print("Run length:\t %d" % (int(total_run_time.total_seconds())))
+        print("Total event counts %d" % (int(nevts)))
+        print("Event Rate %.2f" % (float(event_rate)))
         print("Avg.Beam Current:\t %.2f" % (float(epics_conditions["beam_current"])))
         print("Total charge:\t %.2f" % charge)
         print("Beam energy:\t %.2f" % (float(epics_conditions["beam_energy"])))
@@ -96,6 +107,9 @@ def parse_end_run_info(run_number):
         conditions.append((DefaultConditions.RUN_LENGTH, total_run_time.total_seconds()))
         conditions.append((ParityConditions.BEAM_CURRENT, epics_conditions["beam_current"]))
         conditions.append((ParityConditions.TOTAL_CHARGE, epics_conditions["total_charge"]))
+        conditions.append((DefaultConditions.EVENT_COUNT, nevts))
+        conditions.append((DefaultConditions.EVENT_RATE, event_rate))
+
         # Disabled (conditions not added to DB)
         # conditions.append(('evio_last_file', files))
         # conditions.append(('evio_file_count', num_files))
@@ -114,6 +128,7 @@ def parse_end_run_info(run_number):
 if __name__== '__main__':
     parser = argparse.ArgumentParser(description= "Update the PVDB at the end of a run")
     parser.add_argument("--run", type=str, help="Run number", default="")
+
     args = parser.parse_args()
     run_number = args.run
 
