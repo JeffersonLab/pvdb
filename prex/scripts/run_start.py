@@ -61,7 +61,7 @@ def parse_start_run_info():
 #    parser.add_argument("config_xml_file", type=str, help="full path to configID.xml file")
     parser.add_argument("session_xml_file", type=str, help="full path to controlSessions.xml file")
     parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
-    parser.add_argument("--update", help="Comma separated, modules to update such as coda,epics", default="coda")
+    parser.add_argument("--update", help="Comma separated, modules to update such as coda,epics", default="coda,epics")
     parser.add_argument("--reason", help="Reason of the udpate: 'start', 'udpate', 'end' or ''", default="start")
     parser.add_argument("--exp", help="Experiment name", default="PREX2")
     parser.add_argument("-c", "--connection", help="connection string (eg, mysql://pvdb@localhost/pvdb)")

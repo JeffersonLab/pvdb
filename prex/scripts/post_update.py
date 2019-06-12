@@ -63,7 +63,7 @@ def update(run_number, update_parts, context):
     # Update epics
     if "epics" in update_parts:
         log.debug(Lf("Update epics, run={}", run_number))
-        if not "ops" in host:
+        if not "adaq" in host and not "ops" in host:
             print "You probably don't have myget available from your machine"
             sys.exit()
         
@@ -109,6 +109,10 @@ def update(run_number, update_parts, context):
 
                     for line in cond_out.stdout:
                         value = line.strip().split()[2]
+                        if "<<" in line:
+                            conditions[cond_name] = "-999"
+                            continue
+
                         if cond_name == "ihwp":
                             if value == "1":
                                 conditions[cond_name] = "IN"

@@ -134,6 +134,7 @@ def mya_get_run_conds(run, log):
 
         # skip period when APEXPOS was not available 
         if cond_name == "target_encoder" and start_time_str < "2019-02-18 08:00:00":
+            conditions[cond_name] = "-999"
             continue
         if "current" in cond_name:
             try:
@@ -163,8 +164,10 @@ def mya_get_run_conds(run, log):
 
                 for line in cond_out.stdout:
                     value = line.strip().split()[2]
-                    if "<<" in value:
+
+                    if "<<" in line:
                         conditions[cond_name] = "-999"
+                        continue
                     else:
                         if cond_name == "ihwp":
                             if value == "1":
@@ -201,6 +204,8 @@ def get_target_name(enc_pos):
     Based on the APEX target system for now
     Need to udpate for PREX
     """
+    if not enc_pos.isdigit():
+        return "Invalid"
 
     if enc_pos == "-999":
         return "Invalid"
