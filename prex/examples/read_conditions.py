@@ -25,8 +25,9 @@ def read_conditions(run_number):
     example: run_length
     returns condition_name and value
     """
-    value = db.get_condition(run, "run_length").value
-    print "run_length", value
+    value = db.get_condition(run, "ihwp").value
+    print value
+#    print "run_length", value
 
 if __name__== '__main__':
     read_conditions(sys.argv[1])
