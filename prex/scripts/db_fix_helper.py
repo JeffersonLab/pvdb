@@ -13,7 +13,7 @@ def get_run_end_info_from_data(run_number):
     when prompt analysis output is not available
     :returns condition array with names ("end_time", "total_events")
     """
-    conditions = []
+    conditions = {}
 
     if "QW_DATA" in os.environ:
         data_path = os.environ["QW_DATA"]
@@ -31,19 +31,37 @@ def get_run_end_info_from_data(run_number):
 
     cmds = ["evio2xml", "-ev", "20", "-xtod", "-max", "3", coda_file]
     out = check_output(cmds)
-    xml_root = Et.ElementTre(Et.fromstring(out)).getroot()
+    xml_root = Et.ElementTree(Et.fromstring(out)).getroot()
     xml_check = xml_root.find("event")
     if xml_check is None:
-        print "No event with tag=20 found in the file"
-        sys.exit(1)
-
-    for xml_result in xml_root.findall("event"):
-        run_end_time = int(xml_result.text.split(None)[0])
-        event_count = int(xml_result.text.split(None)[2])
+        print "No event with tag=20 found in the file:"
+        print coda_file
+        print "Use last modified time instead\n"
+        # Most likely the run was not end properly
+        conditions["run_end_time"] = get_last_modifed_time(coda_file)
+        conditions["event_count"] = None
+        conditions["has_run_end"] = False
+        return conditions
+    else:
+        for xml_result in xml_root.findall("event"):
+            run_end_time = int(xml_result.text.split(None)[0])
+            event_count = int(xml_result.text.split(None)[2])
         
-        conditions["end_time"] = datetime.fromtimestamp(run_end_time).strftime("%Y-%m-%d %H:%M:%S")
-        conditions["total_events"] = event_count
-    return conditions
+            conditions["run_end_time"] = datetime.fromtimestamp(run_end_time).strftime("%Y-%m-%d %H:%M:%S")
+            conditions["event_count"] = event_count
+            conditions["has_run_end"] = True
+            return conditions
+
+def get_last_modifed_time(coda_file):
+    last_modified_time = None
+    try:
+        # use last modified time instead
+        mtime = os.path.getmtime(coda_file)
+        last_modified_time = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+    except Exception as ex:
+        log.warning("Unable to get last modified time for the coda file: " + str(ex))
+
+    return last_modified_time
 
 def get_total_events_from_runfile(run_number):
     """    
