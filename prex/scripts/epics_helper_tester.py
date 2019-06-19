@@ -117,8 +117,7 @@ def get_end_run_conds(run):
                 conditions[cond_name] = "-999"
 
     # Get target type condition
-    conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], 
-                                                     conditions[ParityConditions.TARGET_90ENCODER])
+    conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], conditions[ParityConditions.TARGET_90ENCODER])
     return conditions
 
 def mya_get_run_conds(run, log):
@@ -219,11 +218,11 @@ def get_45target_name(enc_pos):
         return "Invalid"
 
     tar_bds = [-100,
-               18017,
-               97564,
-               554953,
-               992342,
-               2297311]
+               2021386,
+               2479033,
+               2636350,
+               2793666,
+               2959982]
 
     tar_name = ["Home", 
                 "WaterCell 2.77%",
@@ -250,13 +249,35 @@ def get_90target_name(enc_pos):
         return "Invalid"
         
     tar_bds = [-100,
-               5801759,
-               6175647,
-               7549535,
-               7923423,
-               8297311]
+               1800388,
+               2228306,
+               2801491,
+               3230535,
+               3659579,
+               4088623,
+               4517667,
+               4946711,
+               5377332,
+               5807953,
+               6238573,
+               6669194,
+               7099815,
+               7529422,
+               7959873,
+               8390325]
 
     tar_name = ["Home", 
+                "Halo",
+                "40Ca 6%",
+                "Carbon Hole (Cold)",
+                "D-208Pb10-D",
+                "D-208Pb9-D",
+                "D-208Pb8-D",
+                "D-208Pb7-D",
+                "D-208Pb6-D",
+                "D-208Pb5-D",
+                "D-208Pb4-D",
+                "D-208Pb3-D",
                 "D-208Pb2-D",
                 "Carbon 1%",
                 "C-208Pb-C",

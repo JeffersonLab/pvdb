@@ -66,6 +66,8 @@ def get_end_run_conds(run):
         end_time_str = now_time.strftime("%Y-%m-%d %H:%M:%S")
 
     for epics_name, cond_name in epics_list.iteritems():
+        if "encoder" in cond_name:
+            continue
         # Get average beam current
         if "current" in cond_name:
             try:
@@ -117,7 +119,7 @@ def get_end_run_conds(run):
                 conditions[cond_name] = "-999"
 
     # Get target type condition
-    conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], conditions[ParityConditions.TARGET_90ENCODER])
+    #conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], conditions[ParityConditions.TARGET_90ENCODER])
     return conditions
 
 def mya_get_run_conds(run, log):

@@ -95,7 +95,7 @@ def parse_end_run_info(run_number):
         print("Avg.Beam Current:\t %.2f" % (float(epics_conditions["beam_current"])))
         print("Total charge:\t %.2f" % charge)
         print("Beam energy:\t %.2f" % (float(epics_conditions["beam_energy"])))
-        print("Target type:\t %s" % (epics_conditions["target_type"]))
+        #print("Target type:\t %s" % (epics_conditions["target_type"]))
         print("Helicity pattern:\t %s" % (epics_conditions["helicity_pattern"]))
         print("Helicity frequency:\t %s Hz" % (epics_conditions["helicity_frequency"]))
         print("IHWP:\t %s" % (epics_conditions["ihwp"]))
