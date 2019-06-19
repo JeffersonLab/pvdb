@@ -7,7 +7,7 @@ from rcdb import DefaultConditions
 
 from scripts import db_fix_helper
 
-TESTMODE=True
+TESTMODE=False
 
 def update_run(run_number):
     # DB Connection
