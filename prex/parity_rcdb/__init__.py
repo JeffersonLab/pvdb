@@ -11,6 +11,8 @@ class ParityConditions(object):
     BEAM_CURRENT = 'beam_current'
     TARGET_TYPE = 'target_type'
     TARGET_ENCODER = 'target_encoder'
+    TARGET_45ENCODER = 'target_45encoder'
+    TARGET_90ENCODER = 'target_90encoder'
     IHWP = 'ihwp'
     RQWP = 'rqwp'
     VWIEN = 'vertical_wien'
@@ -18,8 +20,7 @@ class ParityConditions(object):
     HELICITY_FREQUENCY = 'helicity_frequency'
     HELICITY_PATTERN = 'helicity_pattern'
     EXPERIMENT = 'experiment'
-    BAD_RUN_FLAG = 'bad_run_flag'
-    BAD_RUN_REASON = 'bad_run_reason'
+    RUN_FLAG = 'run_flag'
     WAC_COMMENT = 'wac_comment'
 
 def create_condition_types(db):
@@ -44,6 +45,8 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.TOTAL_CHARGE, ConditionType.FLOAT_FIELD)
     create_condition_type(ParityConditions.TARGET_TYPE, ConditionType.STRING_FIELD)
     create_condition_type(ParityConditions.TARGET_ENCODER, ConditionType.FLOAT_FIELD, "Target encoder position")
+    create_condition_type(ParityConditions.TARGET_45ENCODER, ConditionType.FLOAT_FIELD, "Warm target encoder position")
+    create_condition_type(ParityConditions.TARGET_90ENCODER, ConditionType.FLOAT_FIELD, "Cold target encoder position")
     create_condition_type(ParityConditions.IHWP, ConditionType.STRING_FIELD, "Insertable half-wave plate In/Out")
     create_condition_type(ParityConditions.RQWP, ConditionType.FLOAT_FIELD, "Rotating quarter wave plate")
     create_condition_type(ParityConditions.VWIEN, ConditionType.FLOAT_FIELD, "vertical wien angle in deg")
@@ -51,6 +54,5 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.HELICITY_PATTERN, ConditionType.STRING_FIELD, "helicity pattern")
     create_condition_type(ParityConditions.HELICITY_FREQUENCY, ConditionType.FLOAT_FIELD, "helicity board frequency in Hz")
     create_condition_type(ParityConditions.EXPERIMENT, ConditionType.STRING_FIELD, "experiment name")
-    create_condition_type(ParityConditions.BAD_RUN_FLAG, ConditionType.INT_FIELD, "bad run flag default 0 means good")
-    create_condition_type(ParityConditions.BAD_RUN_REASON, ConditionType.STRING_FIELD, "reason for bad run mark")
+    create_condition_type(ParityConditions.RUN_FLAG, ConditionType.STRING_FIELD, "Run flag filled by WAC (good, bad, suspicious)")
     create_condition_type(ParityConditions.WAC_COMMENT, ConditionType.STRING_FIELD, "additional comment for the run")

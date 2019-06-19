@@ -26,7 +26,13 @@ setenv PATH "$RCDB_HOME":"$RCDB_HOME/bin":"$RCDB_HOME/cpp/bin":$PATH
 setenv PYTHONPATH "$PREX_DIR":$PYTHONPATH
 
 # connection string
-setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
+if ( "$HOSTNAME" =~ *adaq* ) then
+    setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
+else
+    setenv RCDB_CONNECTION mysql://apcoda@hallcdb.jlab.org:3306/a-rcdb
+endif
+
+#setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
 # Test DB
 #setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/pvdb
 

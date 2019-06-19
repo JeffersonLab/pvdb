@@ -27,9 +27,16 @@ def get_run_end_info_from_data(run_number):
         sys.exit(1)
 
     # last file
-    coda_file = files
+    index_last = num_files-1
+    coda_file = files.split('.')[0]+".dat."+str(index_last)
 
-    cmds = ["evio2xml", "-ev", "20", "-xtod", "-max", "3", coda_file]
+    # Start time (to fix the case when run was too short)
+    conditions["run_start_time"] = None
+    coda_file0 = files.split('.')[0]+".dat.0"
+    start_time = get_start_time_from_data(coda_file0)
+    conditions["run_start_time"] = start_time
+
+    cmds = ["evio2xml", "-ev", "20", "-xtod", "-max", "1", coda_file]
     out = check_output(cmds)
     xml_root = Et.ElementTree(Et.fromstring(out)).getroot()
     xml_check = xml_root.find("event")
@@ -51,6 +58,22 @@ def get_run_end_info_from_data(run_number):
             conditions["event_count"] = event_count
             conditions["has_run_end"] = True
             return conditions
+
+def get_start_time_from_data(coda_file):
+    start_time = None
+    cmds = ["evio2xml", "-ev", "18", "-xtod", "-max", "1", coda_file]
+    out = check_output(cmds)
+    xml_root = Et.ElementTree(Et.fromstring(out)).getroot()
+    xml_check = xml_root.find("event")
+    if xml_check is None:
+        print "No event with tag=18 found in the file:"
+        print coda_file
+        return start_time
+    else:
+        for xml_result in xml_root.findall("event"):
+            time_data = int(xml_result.text.split(None)[0])
+            start_time = datetime.fromtimestamp(time_data).strftime("%Y-%m-%d %H:%M:%S")
+        return start_time
 
 def get_last_modifed_time(coda_file):
     last_modified_time = None

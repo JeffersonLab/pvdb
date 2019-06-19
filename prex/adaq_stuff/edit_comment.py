@@ -30,17 +30,17 @@ def edit_comment(run_number, comment, replace):
 
     if "yes" in replace:
         # add the condition value to the DB
-        db.add_condition(run, ParityConditions.SL_COMMENT, comment, replace=True)
+        db.add_condition(run, ParityConditions.WAC_COMMENT, comment, replace=True)
     elif "no" in replace:
         # Get the initial comment
         try:
-            initial_comment = db.get_condition(run, "sl_comment").value
+            initial_comment = db.get_condition(run, "wac_comment").value
         except Exception as e:
             print "Problem reading the initial comment"
             print e
             sys.exit(1)
         new_comment = initial_comment + ", " + comment
-        db.add_condition(run, ParityConditions.SL_COMMENT, new_comment, replace=True)
+        db.add_condition(run, ParityConditions.WAC_COMMENT, new_comment, replace=True)
     else:
         print "Invalid flag: ", replace
 

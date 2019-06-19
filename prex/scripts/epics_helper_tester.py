@@ -230,7 +230,7 @@ def get_45target_name(enc_pos):
                 "Tungsten 0.3%",
                 "Pb 0.9%",
                 "Carbon 0.25%",
-                "Carbon Hole"]
+                "Carbon Hole (Warm)"]
 
     bds_close = min(tar_bds, key=lambda x:abs(x-float(enc_pos)))
 

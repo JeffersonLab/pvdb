@@ -8,9 +8,7 @@ from rcdb.provider import RCDBProvider
 
 def read_conditions(run_number):
     # DB Connection
-    con_str = os.environ["RCDB_CONNECTION"] \
-              if "RCDB_CONNECTION" in os.environ.keys() \
-                 else "mysql://apcoda@cdaqdb1.jlab.org:3306/pvdb"
+    con_str="mysql://apar@hallcdb.jlab.org:3306/a-rcdb"
 
     db = rcdb.RCDBProvider(con_str)
 

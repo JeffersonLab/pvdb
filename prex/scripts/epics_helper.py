@@ -117,8 +117,7 @@ def get_end_run_conds(run):
                 conditions[cond_name] = "-999"
 
     # Get target type condition
-    conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], 
-                                                     conditions[ParityConditions.TARGET_90ENCODER])
+    conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], conditions[ParityConditions.TARGET_90ENCODER])
     return conditions
 
 def mya_get_run_conds(run, log):
