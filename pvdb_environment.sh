@@ -30,5 +30,5 @@ export PYTHONPATH="$PREX_DIR":$PYTHONPATH
 if [[ "$HOSTNAME" == *"adaq"* ]]; then
     export RCDB_CONNECTION=mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
 else
-    export RCDB_CONNECTION=mysql://prex@hallcdb.jlab.org:3306/a-rcdb
+    export RCDB_CONNECTION=mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb
 fi

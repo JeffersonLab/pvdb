@@ -118,7 +118,7 @@ def get_end_run_conds(run):
             except Exception as e:
                 conditions[cond_name] = "-999"
 
-    # Get target type condition
+    # PREX target type name
     #conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], conditions[ParityConditions.TARGET_90ENCODER])
     return conditions
 
@@ -219,7 +219,7 @@ def get_45target_name(enc_pos):
     if enc_pos == "-999":
         return "Invalid"
 
-    tar_bds = [-100,
+    tar_bds = [13,
                2021386,
                2479033,
                2636350,
@@ -250,7 +250,7 @@ def get_90target_name(enc_pos):
     if enc_pos == "-999":
         return "Invalid"
         
-    tar_bds = [-100,
+    tar_bds = [0,
                1800388,
                2228306,
                2801491,

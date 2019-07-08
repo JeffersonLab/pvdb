@@ -29,7 +29,7 @@ setenv PYTHONPATH "$PREX_DIR":$PYTHONPATH
 if ( "$HOSTNAME" =~ *adaq* ) then
     setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
 else
-    setenv RCDB_CONNECTION mysql://apcoda@hallcdb.jlab.org:3306/a-rcdb
+    setenv RCDB_CONNECTION mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb
 endif
 
 #setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb

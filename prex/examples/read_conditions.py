@@ -8,7 +8,7 @@ from rcdb.provider import RCDBProvider
 
 def read_conditions(run_number):
     # DB Connection (read-only)
-    con_str="mysql://apar@hallcdb.jlab.org:3306/a-rcdb"
+    con_str="mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb"
 
     db = rcdb.RCDBProvider(con_str)
 

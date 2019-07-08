@@ -7,6 +7,7 @@ class ParityConditions(object):
     """
     RUN_PRESTART_TIME = 'run_prestart_time'
     TOTAL_CHARGE = 'total_charge'
+    GOOD_CHARGE = 'good_charge'
     BEAM_ENERGY = 'beam_energy'
     BEAM_CURRENT = 'beam_current'
     TARGET_TYPE = 'target_type'
@@ -22,6 +23,7 @@ class ParityConditions(object):
     EXPERIMENT = 'experiment'
     RUN_FLAG = 'run_flag'
     WAC_COMMENT = 'wac_comment'
+    PROMPT_ANALYSIS = 'prompt_analysis'
 
 def create_condition_types(db):
     """
@@ -43,6 +45,7 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.BEAM_ENERGY, ConditionType.FLOAT_FIELD, "GeV")
     create_condition_type(ParityConditions.BEAM_CURRENT, ConditionType.FLOAT_FIELD, "Average beam current in uA")
     create_condition_type(ParityConditions.TOTAL_CHARGE, ConditionType.FLOAT_FIELD)
+    create_condition_type(ParityConditions.GOOD_CHARGE, ConditionType.FLOAT_FIELD, "total charge after basic cut")
     create_condition_type(ParityConditions.TARGET_TYPE, ConditionType.STRING_FIELD)
     create_condition_type(ParityConditions.TARGET_ENCODER, ConditionType.FLOAT_FIELD, "Target encoder position")
     create_condition_type(ParityConditions.TARGET_45ENCODER, ConditionType.FLOAT_FIELD, "Warm target encoder position")
@@ -56,3 +59,5 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.EXPERIMENT, ConditionType.STRING_FIELD, "experiment name")
     create_condition_type(ParityConditions.RUN_FLAG, ConditionType.STRING_FIELD, "Run flag filled by WAC (good, bad, suspicious)")
     create_condition_type(ParityConditions.WAC_COMMENT, ConditionType.STRING_FIELD, "additional comment for the run")
+    create_condition_type(ParityConditions.PROMPT_ANALYSIS, ConditionType.BOOL_FIELD, "prompt analysis done")
+
