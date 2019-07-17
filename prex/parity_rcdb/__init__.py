@@ -25,6 +25,9 @@ class ParityConditions(object):
     WAC_COMMENT = 'wac_comment'
     PROMPT_ANALYSIS = 'prompt_analysis'
     SLUG = 'slug'
+    BMW = 'bmw'
+    FEEDBACK = 'feedback'
+    FFB = 'ffb'
 
 def create_condition_types(db):
     """
@@ -62,3 +65,6 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.WAC_COMMENT, ConditionType.STRING_FIELD, "additional comment for the run")
     create_condition_type(ParityConditions.PROMPT_ANALYSIS, ConditionType.BOOL_FIELD, "prompt analysis done")
     create_condition_type(ParityConditions.SLUG, ConditionType.INT_FIELD, "slug number for parity data")
+    create_condition_type(ParityConditions.BMW, ConditionType.STRING_FIELD, "BMW ON/OFF")
+    create_condition_type(ParityConditions.FEEDBACK, ConditionType.STRING_FIELD, "Aq feedback ON/OFF")
+    create_condition_type(ParityConditions.FFB, ConditionType.STRING_FIELD, "Fast feedback ON/OFF")

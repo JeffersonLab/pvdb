@@ -28,6 +28,8 @@ class ParityCodaRunLogParseResult(object):
         self.coda_last_file = None       # Last data filename
         self.coda_files_count = None     # Number of coda data files
         self.experiment_name = None      # Experiment name
+        self.bmw = None                  # BMW
+        self.feedback = None             # Aq feedback
 
 def parity_configs(config_id):
     if config_id > 3:
@@ -241,6 +243,7 @@ def runinfo_parser():
     
     [parity]
     feedback:off
+    bmw=on
     ihwp:in
     
     [rightarm]
