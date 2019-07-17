@@ -24,6 +24,7 @@ class ParityConditions(object):
     RUN_FLAG = 'run_flag'
     WAC_COMMENT = 'wac_comment'
     PROMPT_ANALYSIS = 'prompt_analysis'
+    SLUG = 'slug'
 
 def create_condition_types(db):
     """
@@ -60,4 +61,4 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.RUN_FLAG, ConditionType.STRING_FIELD, "Run flag filled by WAC (good, bad, suspicious)")
     create_condition_type(ParityConditions.WAC_COMMENT, ConditionType.STRING_FIELD, "additional comment for the run")
     create_condition_type(ParityConditions.PROMPT_ANALYSIS, ConditionType.BOOL_FIELD, "prompt analysis done")
-
+    create_condition_type(ParityConditions.SLUG, ConditionType.INT_FIELD, "slug number for parity data")
