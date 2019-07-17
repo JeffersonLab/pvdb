@@ -31,7 +31,7 @@ epics_list = {
     "pcrex45BDSPOS.VAL":ParityConditions.TARGET_45ENCODER,
     "pcrex90BDSPOS.VAL":ParityConditions.TARGET_90ENCODER,
     "IGL1I00OD16_16":ParityConditions.IHWP,
-    "psub_pl_pos":ParityConditions.RQWP,
+    "psub_pl_pos":ParityConditions.RHWP,
     "HWienAngle":ParityConditions.HWIEN,
     "VWienAngle":ParityConditions.VWIEN,
     "HELPATTERNd":ParityConditions.HELICITY_PATTERN,

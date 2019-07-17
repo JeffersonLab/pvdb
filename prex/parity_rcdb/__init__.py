@@ -15,7 +15,7 @@ class ParityConditions(object):
     TARGET_45ENCODER = 'target_45encoder'
     TARGET_90ENCODER = 'target_90encoder'
     IHWP = 'ihwp'
-    RQWP = 'rqwp'
+    RHWP = 'rhwp'
     VWIEN = 'vertical_wien'
     HWIEN = 'horizontal_wien'
     HELICITY_FREQUENCY = 'helicity_frequency'
@@ -52,7 +52,7 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.TARGET_45ENCODER, ConditionType.FLOAT_FIELD, "Warm target encoder position")
     create_condition_type(ParityConditions.TARGET_90ENCODER, ConditionType.FLOAT_FIELD, "Cold target encoder position")
     create_condition_type(ParityConditions.IHWP, ConditionType.STRING_FIELD, "Insertable half-wave plate In/Out")
-    create_condition_type(ParityConditions.RQWP, ConditionType.FLOAT_FIELD, "Rotating quarter wave plate")
+    create_condition_type(ParityConditions.RHWP, ConditionType.FLOAT_FIELD, "Rotating 1/2 wave plate")
     create_condition_type(ParityConditions.VWIEN, ConditionType.FLOAT_FIELD, "vertical wien angle in deg")
     create_condition_type(ParityConditions.HWIEN, ConditionType.FLOAT_FIELD, "horizontal wien angle in deg")
     create_condition_type(ParityConditions.HELICITY_PATTERN, ConditionType.STRING_FIELD, "helicity pattern")

@@ -31,11 +31,3 @@ if ( "$HOSTNAME" =~ *adaq* ) then
 else
     setenv RCDB_CONNECTION mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb
 endif
-
-#setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
-# Test DB
-#setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/pvdb
-
-#if (! $?RCDB_CONNECTION ) then
-#    setenv RCDB_CONNECTION mysql://apcoda@cdaqdb1.jlab.org:3306/a-rcdb
-#endif
