@@ -46,7 +46,7 @@ def get_run_end_info_from_data(run_number):
         print "Use last modified time instead\n"
         # Most likely the run was not end properly
         conditions["run_end_time"] = get_last_modifed_time(coda_file)
-        conditions["event_count"] = None
+        conditions["event_count"] = get_total_events_from_prompt(run_number)
         conditions["has_run_end"] = False
         return conditions
     else:
@@ -86,6 +86,19 @@ def get_last_modifed_time(coda_file):
 
     return last_modified_time
 
+def get_total_events_from_prompt(run_number):
+    summary_file="/adaqfs/home/apar/PREX/prompt/japanOutput/summary_" + run_number + ".txt"
+
+    nevts = None
+
+    with open(summary_file, 'rb') as f:
+        lines = filter(None, (line.rstrip() for line in f))
+        for line in lines:
+            if "events processed" in line:
+                nevts = line.split(":")[1].strip()
+                break
+    return nevts
+
 def get_total_events_from_runfile(run_number):
     """    
     get total events
@@ -95,6 +108,7 @@ def get_total_events_from_runfile(run_number):
 
     nevts = None
     with open(runfile, 'rb') as f:
+        lines = filter(None, (line.rstrip() for line in f))
         for line in lines:
             if "Total Events" in line:
                 nevts = line.split(":")[1].strip()

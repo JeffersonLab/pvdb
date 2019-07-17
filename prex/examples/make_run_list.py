@@ -36,6 +36,7 @@ def get_list():
     parser.add_argument("--run", help="single run number or range 3000-3100", required=True)
     parser.add_argument("--type", type=str, help="Production, Calibration, Test, Junk (if you want..why not)")
     parser.add_argument("--target", type=str, help="208Pb, D-Pb-D, C-Pb-C, Carbon, Calcium")
+    parser.add_argument("--nevt", type=int, help="Minimum number of events")
     parser.add_argument("--ihwp", type=str, help="Insertable 1/2 wave plate IN or OUT")
     parser.add_argument("--rhwp", type=int, help="Rotating 1/2 wave plate")
     parser.add_argument("--slug", type=int, help="slug number")
@@ -71,6 +72,14 @@ def get_list():
     # Target type    
     if args.target is not None:
         select_str = "'%s' in target_type" % args.target
+        if query_str is None:
+            query_str = select_str
+        else:
+            query_str = query_str + " and " + select_str
+
+    # event count
+    if args.nevt is not None:
+        select_str = "event_count > %d" % (int(args.nevt))
         if query_str is None:
             query_str = select_str
         else:
