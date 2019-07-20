@@ -20,6 +20,7 @@ from parity_rcdb import parity_coda_parser
 import run_start
 
 from scripts import fixer_run_end
+from scripts import db_fix_helper
 
 log = logging.getLogger('pvdb') # create run configuration standard logger
 log.addHandler(logging.StreamHandler(sys.stdout))  # add console output for logger
@@ -32,6 +33,14 @@ def get_usage():
     """
 
 def update(run_number, update_parts, context):
+
+    assert isinstance(context.db, RCDBProvider)
+    db = context.db
+
+    run = db.get_run(run_number)
+    if not run:
+        log.info(Lf("Run '{}' is not found in DB, create one", run_number))
+        run = db.create_run(run_number)
 
     host = socket.gethostname()
 
@@ -59,14 +68,16 @@ def update(run_number, update_parts, context):
     # Udpate db (coda)
     if "coda" in update_parts:
         log.debug(Lf("Update run, run={}", run_number))
-        # Parse coda info (start, end time, ..)
-        #        coda_parse_result = parity_coda_parser.parse_coda_data_file(coda_file_name)
-        #        run_start.update_parity_coda_conditions(context, coda_parse_result)
-        # use fixer script to update coda info
-        fixer_run_end.update_run(str(run_number))
-
-    assert isinstance(context.db, RCDBProvider)
-    db = context.db
+        if context.reason == UpdateReasons.START:
+            # mainly for totally missing run recovery
+            conditions = {}
+            conditions = db_fix_helper.get_run_end_info_from_data(run_number)
+            run.start_time = conditions["run_start_time"]
+            db.add_condition(run, DefaultConditions.RUN_CONFIG, conditions["run_config"], True)
+            db.add_condition(run, DefaultConditions.USER_COMMENT, conditions["user_comment"], True)
+            db.session.commit()
+        else:
+            fixer_run_end.update_run(str(run_number))
 
     # Update epics
     if "epics" in update_parts:
@@ -75,11 +86,6 @@ def update(run_number, update_parts, context):
             print "You probably don't have myget available from your machine"
             sys.exit()
         
-        if not db.get_run(run_number):
-            log.info(Lf("Run '{}' is not found in DB", run_number))
-            return
-
-        run = db.get_run(run_number)
         conditions = {}
 
         """

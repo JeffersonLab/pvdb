@@ -48,7 +48,6 @@ def get_run_end_info_from_data(run_number):
         conditions["run_end_time"] = get_last_modifed_time(coda_file)
         conditions["event_count"] = get_total_events_from_prompt(run_number)
         conditions["has_run_end"] = False
-        return conditions
     else:
         for xml_result in xml_root.findall("event"):
             run_end_time = int(xml_result.text.split(None)[0])
@@ -57,7 +56,12 @@ def get_run_end_info_from_data(run_number):
             conditions["run_end_time"] = datetime.fromtimestamp(run_end_time).strftime("%Y-%m-%d %H:%M:%S")
             conditions["event_count"] = event_count
             conditions["has_run_end"] = True
-            return conditions
+
+    # Get user comment and config name
+    conditions["user_comment"] = get_user_comment(run_number)
+    conditions["run_config"] = get_run_config(run_number)
+
+    return conditions
 
 def get_start_time_from_data(coda_file):
     start_time = None
@@ -88,8 +92,10 @@ def get_last_modifed_time(coda_file):
 
 def get_total_events_from_prompt(run_number):
     summary_file="/adaqfs/home/apar/PREX/prompt/japanOutput/summary_" + run_number + ".txt"
-
     nevts = None
+
+    if not os.path.exists(summary_file):
+        return nevts
 
     with open(summary_file, 'rb') as f:
         lines = filter(None, (line.rstrip() for line in f))
@@ -120,3 +126,33 @@ def get_total_events_from_runfile(run_number):
         sys.exit(1)
 
     return nevts
+
+def get_run_config(run_number):
+    halog_file = "/adaqfs/home/apar/epics/runfiles/Start_of_Run_" + run_number + ".epics"
+
+    config_name = None
+    if not os.path.exists(halog_file):
+        return config_name
+
+    with open(halog_file, 'rb') as f:
+        lines = filter(None, (line.rstrip() for line in f))
+        for line in lines:
+            if "CODA Configuration" in line:
+                config_name = line.split(":")[1].strip()
+                break
+    return config_name
+
+def get_user_comment(run_number):
+    halog_file = "/adaqfs/home/apar/epics/runfiles/Start_of_Run_" + run_number + ".epics"
+    comment = None
+
+    if not os.path.exists(halog_file):
+        return comment
+
+    with open(halog_file, 'rb') as f:
+        lines = filter(None, (line.rstrip() for line in f))
+        for line in lines:
+            if "Comment:" in line:
+                comment = line.split(":")[1].strip()
+                break
+    return comment

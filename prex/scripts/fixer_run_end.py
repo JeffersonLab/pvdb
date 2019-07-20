@@ -20,7 +20,7 @@ def update_run(run_number):
     run = db.get_run(run_number)
     if not run:
         print ("Run %s is not found in DB" % run_number)
-        sys.exit(1)
+        run = db.create_run(run_number)
 
     conditions = {}
     conditions = db_fix_helper.get_run_end_info_from_data(run_number)

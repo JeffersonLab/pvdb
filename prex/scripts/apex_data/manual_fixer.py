@@ -6,8 +6,8 @@ import rcdb
 from rcdb import ConfigurationProvider
 
 run=sys.argv[1]
-tstart=datetime.strptime("2019-03-15 10:55:49", "%Y-%m-%d %H:%M:%S")
-tend=datetime.strptime("2019-03-15 11:53:13", "%Y-%m-%d %H:%M:%S")
+tstart=datetime.strptime("2019-07-19 20:30:00", "%Y-%m-%d %H:%M:%S")
+tend=datetime.strptime("2019-07-19 20:31:00", "%Y-%m-%d %H:%M:%S")
 
 con_str = os.environ["RCDB_CONNECTION"] \
     if "RCDB_CONNECTION" in os.environ.keys() \

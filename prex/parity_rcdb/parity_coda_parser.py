@@ -177,24 +177,25 @@ def parse_coda_data_file(coda_file):
                 parse_result.run_config = parity_configs(xml_run_config)
             except Exception as ex:
                 log.warning("Unable to parse prestart information. Error: " + str(ex))
-            elif tag == "18":
-                xml_start_time = int(xml_result.text.split(None)[0])
-                try:
-                    parse_result.start_time = datetime.fromtimestamp(xml_start_time).strftime("%Y-%m-%d %H:%M:%S")
-                    parse_result.has_run_start = True
-                except Exception as ex:
-                    log.warning("Unable to parse start time. Error: " + str(ex))
-                elif tag == "20":
-                    xml_end_time = int(xml_result.text.split(None)[0])
-                    xml_event_count = int(xml_result.text.split(None)[2])
-                    try:
-                        parse_result.end_time = datetime.fromtimestamp(xml_end_time).strftime("%Y-%m-%d %H:%M:%S")
-                        parse_result.event_count = xml_event_count
-                        parse_result.has_run_end = True
-                    except Exception as ex:
-                        log.warning("Unable to parse end time. Error: " + str(ex))
-                    else:
-                        continue
+
+        elif tag == "18":
+            xml_start_time = int(xml_result.text.split(None)[0])
+            try:
+                parse_result.start_time = datetime.fromtimestamp(xml_start_time).strftime("%Y-%m-%d %H:%M:%S")
+                parse_result.has_run_start = True
+            except Exception as ex:
+                log.warning("Unable to parse start time. Error: " + str(ex))
+        elif tag == "20":
+            xml_end_time = int(xml_result.text.split(None)[0])
+            xml_event_count = int(xml_result.text.split(None)[2])
+            try:
+                parse_result.end_time = datetime.fromtimestamp(xml_end_time).strftime("%Y-%m-%d %H:%M:%S")
+                parse_result.event_count = xml_event_count
+                parse_result.has_run_end = True
+            except Exception as ex:
+                log.warning("Unable to parse end time. Error: " + str(ex))
+        else:
+            continue
 
     # Most likely the run was not end properly
     if parse_result.has_run_end is False:
