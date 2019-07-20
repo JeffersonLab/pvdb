@@ -29,7 +29,8 @@ class ParityCodaRunLogParseResult(object):
         self.coda_files_count = None     # Number of coda data files
         self.experiment_name = None      # Experiment name
         self.bmw = None                  # BMW
-        self.feedback = None             # Aq feedback
+        self.feedback = None             # Parity feedback
+        self.slug = None                 # slug number
 
 def parity_configs(config_id):
     if config_id > 3:
@@ -74,6 +75,8 @@ def parse_start_run_data(session_file):
     # parse controlSessions.xml
     log.debug(Lf("Parsing controlSessions file '{0}'", session_file))
     parse_coda_session_file(result, session_file)
+
+    result.slug = GetSlugNumber()
 
     return result
 
@@ -133,9 +136,9 @@ def parse_coda_session_file(parse_result, filename):
     # coda config name, check consistency with configID.xml
     config_name = xml_root.find("session").find("config").text
     parse_result.run_config = config_name
-#    if config_name != parse_result.run_config:
-#        log.warning(Lf("config name mismatch {},{}", config_name, parser_result.run_config))
-        
+    #    if config_name != parse_result.run_config:
+    #        log.warning(Lf("config name mismatch {},{}", config_name, parser_result.run_config))
+    
     # coda run number
     parse_result.run_number = int(xml_root.find("session").find("runnumber").text)
 
@@ -174,24 +177,24 @@ def parse_coda_data_file(coda_file):
                 parse_result.run_config = parity_configs(xml_run_config)
             except Exception as ex:
                 log.warning("Unable to parse prestart information. Error: " + str(ex))
-        elif tag == "18":
-            xml_start_time = int(xml_result.text.split(None)[0])
-            try:
-                parse_result.start_time = datetime.fromtimestamp(xml_start_time).strftime("%Y-%m-%d %H:%M:%S")
-                parse_result.has_run_start = True
-            except Exception as ex:
-                log.warning("Unable to parse start time. Error: " + str(ex))
-        elif tag == "20":
-            xml_end_time = int(xml_result.text.split(None)[0])
-            xml_event_count = int(xml_result.text.split(None)[2])
-            try:
-                parse_result.end_time = datetime.fromtimestamp(xml_end_time).strftime("%Y-%m-%d %H:%M:%S")
-                parse_result.event_count = xml_event_count
-                parse_result.has_run_end = True
-            except Exception as ex:
-                log.warning("Unable to parse end time. Error: " + str(ex))
-        else:
-            continue
+            elif tag == "18":
+                xml_start_time = int(xml_result.text.split(None)[0])
+                try:
+                    parse_result.start_time = datetime.fromtimestamp(xml_start_time).strftime("%Y-%m-%d %H:%M:%S")
+                    parse_result.has_run_start = True
+                except Exception as ex:
+                    log.warning("Unable to parse start time. Error: " + str(ex))
+                elif tag == "20":
+                    xml_end_time = int(xml_result.text.split(None)[0])
+                    xml_event_count = int(xml_result.text.split(None)[2])
+                    try:
+                        parse_result.end_time = datetime.fromtimestamp(xml_end_time).strftime("%Y-%m-%d %H:%M:%S")
+                        parse_result.event_count = xml_event_count
+                        parse_result.has_run_end = True
+                    except Exception as ex:
+                        log.warning("Unable to parse end time. Error: " + str(ex))
+                    else:
+                        continue
 
     # Most likely the run was not end properly
     if parse_result.has_run_end is False:
@@ -275,3 +278,13 @@ def GetTotalEvents():
     cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE).stdout.read().strip()
     nevts = cond_out.split()[2]
     return nevts
+
+def GetSlugNumber():
+    slug_number = None
+
+    slug_file = "/adaqfs/home/apar/feedback2019/SLUGNUMBER"
+    with open(slug_file, 'rb') as f:
+        for line in f:
+            slug_number = line.strip()
+
+    return slug_number

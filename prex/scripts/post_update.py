@@ -15,9 +15,11 @@ from rcdb import UpdateContext, UpdateReasons, DefaultConditions
 from rcdb.provider import RCDBProvider
 from rcdb.model import ConditionType, Condition
 
-# rcdb stuff
+# prex stuff
 from parity_rcdb import parity_coda_parser
 import run_start
+
+from scripts import fixer_run_end
 
 log = logging.getLogger('pvdb') # create run configuration standard logger
 log.addHandler(logging.StreamHandler(sys.stdout))  # add console output for logger
@@ -30,17 +32,17 @@ def get_usage():
     """
 
 def update(run_number, update_parts, context):
-    assert isinstance(context.db, RCDBProvider)
-    db = context.db
 
+    host = socket.gethostname()
+
+    """
     coda_path = None
     coda_file_name = None
 
-    host = socket.gethostname()
     if "adaq" in host:
-        coda_path = "/adaq2/data1/apar/"
+        coda_path = "/adaq1/data1/apar/"
     elif "aonl" in host:
-        coda_path = "/adaq2/data1/apar/"
+        coda_path = "/adaq1/data1/apar/"
     else:
         coda_path = "/cache/halla/parity/raw/"
 
@@ -52,13 +54,19 @@ def update(run_number, update_parts, context):
         print "CODA file is not found", run_number
         log.info(Lf("Coda file is not found, run={}", run_number))
         sys.exit()
+    """
 
     # Udpate db (coda)
     if "coda" in update_parts:
         log.debug(Lf("Update run, run={}", run_number))
         # Parse coda info (start, end time, ..)
-        coda_parse_result = parity_coda_parser.parse_coda_data_file(coda_file_name)
-        run_start.update_parity_coda_conditions(context, coda_parse_result)
+        #        coda_parse_result = parity_coda_parser.parse_coda_data_file(coda_file_name)
+        #        run_start.update_parity_coda_conditions(context, coda_parse_result)
+        # use fixer script to update coda info
+        fixer_run_end.update_run(str(run_number))
+
+    assert isinstance(context.db, RCDBProvider)
+    db = context.db
 
     # Update epics
     if "epics" in update_parts:
@@ -86,7 +94,7 @@ def update(run_number, update_parts, context):
                 start_time_str = datetime.strftime(run.start_time, "%Y-%m-%d %H:%M:%S")
                 end_time_str = datetime.strftime(run.end_time, "%Y-%m-%d %H:%M:%S")
                 if "current" in cond_name:
-                    cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "1:70", "-l", epics_name]
+                    cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "1:100", "-l", epics_name]
                     cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)
 
                     n = 0
@@ -132,13 +140,13 @@ def update(run_number, update_parts, context):
                 log.warn(Lf("Error in epics request : '{}',{}'", cond_name, e))
 
         # Get target type condition
-        conditions["target_type"] = epics_helper.get_target_name(conditions["target_encoder"])
+        conditions["target_type"] = epics_helper.get_PREX_target_name(conditions["target_45encoder"], conditions["target_90encoder"])
 
         db.add_conditions(run_number, conditions, True)
 
     # >oO DEBUG log message
     db.add_log_record("",
-                      "End of update. datetime: '{}'"
+                      "Post run update. datetime: '{}'"
                       .format(datetime.now()), run_number)
 
 if __name__ == "__main__":
@@ -151,7 +159,15 @@ if __name__ == "__main__":
     parser.add_argument("--reason", help="Reason of the udpate: 'start', 'udpate', 'end' or ''", default="")
     parser.add_argument("-c", "--connection", help="connection string (eg, mysql://pvdb@localhost/pvdb)")
     args = parser.parse_args()
-    run_number = args.run
+
+    runs = []
+    if "-" in args.run:
+        brun=args.run.split("-")[0]
+        erun=args.run.split("-")[1]
+        for x in range(int(brun), int(erun)+1):
+            runs.append(x)
+    else:
+        runs.append(args.run)
 
     # Connection
     if args.connection:
@@ -179,4 +195,6 @@ if __name__ == "__main__":
     # Create update context
     update_context = rcdb.UpdateContext(db, update_reason)
 
-    update(run_number, update_parts, update_context)
+    for run_number in range(int(runs[0]), int(runs[-1])+1):
+        print "Update run : ", run_number
+        update(str(run_number), update_parts, update_context)

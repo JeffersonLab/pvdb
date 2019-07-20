@@ -237,6 +237,10 @@ def update_parity_coda_conditions(context, parse_result):
     if parse_result.run_config is not None:
         conditions.append((DefaultConditions.RUN_CONFIG, parse_result.run_config))
 
+    # slug number
+    if parse_result.slug is not None:
+        conditions.append((ParityConditions.SLUG, parse_result.slug))
+
     #These need to be udpated by Run END
     # Set the run as not properly finished (We hope that the next section will
     if parse_result.has_run_end is not None:
