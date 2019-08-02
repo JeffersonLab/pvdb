@@ -6,7 +6,7 @@ import urllib2
 import requests
 import pickle
 
-from script import db_fix_helper
+from scripts import db_fix_helper
 
 import rcdb
 from rcdb.provider import RCDBProvider
@@ -22,7 +22,7 @@ def get_halog_content(run_number, ddict):
     url = url + '&limit=0'
 
     url = url + '&startdate=2019-07-01'
-    url = url + '&enddate=2019-07-31' 
+    url = url + '&enddate=2019-08-02' 
 
     url = url + '&tag=StartOfRun'
 
@@ -74,11 +74,11 @@ def load_halog_content(runs):
         infile.close()
 
     for run in runs:
-        print "check run", run
         run = str(run)
         if run in ddict:
             continue
         else:
+            print "check run", run
             get_halog_content(run, ddict)
 
     with open(pickle_file, 'wb') as ff:
@@ -111,14 +111,23 @@ if __name__== '__main__':
     con_str = "mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb"
     db = rcdb.RCDBProvider(con_str)
 
-    result = db.select_runs("", runs[0], runs[1])
+    result = db.select_runs("", runs[0], runs[-1])
     row = result.get_values(["run_config", "run_type", "target_type", "user_comment", "run_flag"])
+
+    skip_runs = [3485, 3542]
 
     irow=0
     for run in result:
-        print run.number, row[irow]
-        print run.number, dd[str(run.number)]['run_type'], dd[str(run.number)]['user_comment']
-        print run.number, dd[str(run.number)]['run_config'], dd[str(run.number)]['user_comment2']
-        print
+        if int(run.number) in skip_runs:
+            irow += 1
+            continue
 
+        print run.number
+        print row[irow][1], dd[str(run.number)]['run_type']
+        print row[irow][3]
+        print dd[str(run.number)]['user_comment']
+        print dd[str(run.number)]['user_comment2']
+        print row[irow][4]
+        print
+        
         irow += 1
