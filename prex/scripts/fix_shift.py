@@ -58,7 +58,7 @@ def load_halog_content(runs):
 
     ddict = {}
     if os.path.isfile(pickle_file):
-        infile = open(pickel_file, 'rb')
+        infile = open(pickle_file, 'rb')
         try:
             ddict = pickle.load(infile)
         except EOFError:
@@ -66,6 +66,7 @@ def load_halog_content(runs):
         infile.close()
 
     for run in runs:
+        print "check run", run
         run = str(run)
         if run in ddict:
             continue
@@ -77,7 +78,6 @@ def load_halog_content(runs):
 
     print "HALOG data loaded"
     return ddict
-
 
 if __name__== '__main__':
 
@@ -98,5 +98,3 @@ if __name__== '__main__':
         sys.exit(1)
 
     dd = load_halog_content(runs)
-    print dd['3740']
-
