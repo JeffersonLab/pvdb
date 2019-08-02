@@ -10,6 +10,9 @@ from scripts import db_fix_helper
 
 import rcdb
 from rcdb.provider import RCDBProvider
+from rcdb import DefaultConditions
+
+TESTMODE=True
 
 def get_halog_content(run_number, ddict):
     ddict[run_number] = {}
@@ -108,13 +111,14 @@ if __name__== '__main__':
     dd = load_halog_content(runs)
 
 
-    con_str = "mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb"
+    #con_str = "mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb"
+    con_str = os.environ["RCDB_CONNECTION"]
     db = rcdb.RCDBProvider(con_str)
 
     result = db.select_runs("", runs[0], runs[-1])
-    row = result.get_values(["run_config", "run_type", "target_type", "user_comment", "run_flag"])
+    row = result.get_values(["run_config", "run_type", "target_type", "user_comment", "run_flag", "wac_comment"])
 
-    skip_runs = [3485, 3542]
+    skip_runs = [3485, 3488, 3542]
 
     irow=0
     for run in result:
@@ -122,12 +126,59 @@ if __name__== '__main__':
             irow += 1
             continue
 
-        print run.number
-        print row[irow][1], dd[str(run.number)]['run_type']
-        print row[irow][3]
-        print dd[str(run.number)]['user_comment']
-        print dd[str(run.number)]['user_comment2']
-        print row[irow][4]
-        print
+        # fix comment
+        """
+        if row[irow][3] != dd[str(run.number)]['user_comment']:
+            if TESTMODE:
+                print run.number
+                print row[irow][3]            
+                print row[irow+1][3]            
+                print dd[str(run.number)]['user_comment']
+                print
+            else:
+                db.add_condition(run, DefaultConditions.USER_COMMENT, dd[str(run.number)]['user_comment'], True)
+        """
+
+        # Fix run type
+        """
+        if row[irow][1] != dd[str(run.number)]['run_type']:
+            if TESTMODE:
+                print run.number
+                print row[irow][1]            
+                print row[irow+1][1]            
+                print dd[str(run.number)]['run_type']
+                print
+            else:
+                if dd[str(run.number)]['run_type'] is None:
+                    print "Update manually"
+                    print run.number
+                    print row[irow][1]            
+                    print row[irow+1][1]            
+                    print dd[str(run.number)]['run_type']
+                    print
+                else:
+                    db.add_condition(run, DefaultConditions.RUN_TYPE, dd[str(run.number)]['run_type'], True)
+                
+        """
+
+        if row[irow][1] == 'Production':
+            if row[irow][4] is None or row[irow][4] != 'Good':
+                print
+                print run.number
+                print row[irow][4]
+                print row[irow][5]
+
+        """
+        if row[irow][3] != dd[str(run.number)]['user_comment']:
+            print run.number
+            print row[irow][1], dd[str(run.number)]['run_type']
+            print row[irow][3]
+            if dd[str(run.number)]['user_comment'] == "" and row[irow][3] is not None:
+                print "No user comment but RCDB has comment"
+            print dd[str(run.number)]['user_comment']
+            print dd[str(run.number)]['user_comment2']
+            print row[irow][4]
+            print
+        """
         
         irow += 1
