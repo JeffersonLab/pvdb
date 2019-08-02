@@ -6,6 +6,10 @@ import urllib2
 import requests
 import pickle
 
+from script import db_fix_helper
+
+import rcdb
+from rcdb.provider import RCDBProvider
 
 def get_halog_content(run_number, ddict):
     ddict[run_number] = {}
@@ -46,9 +50,13 @@ def get_halog_content(run_number, ddict):
             if 'Comment:' in line:
                 user_comment = line.split(':')[1].strip().split(',parity')[0]
 
-#    return {'run_type': run_type, 'user_comment': user_comment}
+    #return {'run_type': run_type, 'user_comment': user_comment}
     ddict[run_number]['run_type'] = run_type
     ddict[run_number]['user_comment'] = user_comment
+
+    coment_from_runfile = db_fix_helper.get_user_comment(run_number)
+    ddict[run_number]['user_comment2'] = coment_from_runfile
+    ddict[run_number]['run_config'] = db_fix_helper.get_run_config(run_number)
 
 def get_rcdb_content(run_number):
     result = db.select_runs("", runs[0], runs[1])
@@ -98,3 +106,19 @@ if __name__== '__main__':
         sys.exit(1)
 
     dd = load_halog_content(runs)
+
+
+    con_str = "mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb"
+    db = rcdb.RCDBProvider(con_str)
+
+    result = db.select_runs("", runs[0], runs[1])
+    row = result.get_values(["run_config", "run_type", "target_type", "user_comment", "run_flag"])
+
+    irow=0
+    for run in result:
+        print run.number, row[irow]
+        print run.number, dd[str(run.number)]['run_type'], dd[str(run.number)]['user_comment']
+        print run.number, dd[str(run.number)]['run_config'], dd[str(run.number)]['user_comment2']
+        print
+
+        irow += 1
