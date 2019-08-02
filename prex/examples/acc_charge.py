@@ -36,10 +36,18 @@ def get_summary_output(run_number):
             if "Percentage of good events" in line:
                 value = line.split(None)[4]
                 summary.append(value)
-            if "bcm_an_ds3" in line:
+            # Cameron: changed behavior of charge getter to select the correct BCM on 7/30/2019 (Kent changed it before)
+            if run_number<str(3583):
+              if "bcm_an_ds" in line:
                 value = line.split("Mean:")[1].split(None)[0]
                 summary.append(value)
                 n += 1
+            elif run_number>=str(3583):
+              if "cav4cQ" in line:
+                value = line.split("Mean:")[1].split(None)[0]
+                summary.append(value)
+                n += 1
+
     return summary
 
 def get_usage():
@@ -71,7 +79,8 @@ def get_info_all():
     parser = argparse.ArgumentParser(description="", usage=get_usage())
     parser.add_argument("--run", type=str, help="run range")
     parser.add_argument("--list", type=str, help="use run list file")
-    parser.add_argument("--goodrun", type=bool, help="select only runs marked as Good", default=False)
+    # Devi changed this to default to only selecting Good Runs (for safety)
+    parser.add_argument("--goodrun", type=bool, help="select only runs marked as Good", default=True)
     args = parser.parse_args()
 
     # run list

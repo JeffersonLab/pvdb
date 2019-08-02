@@ -270,6 +270,7 @@ def get_90target_name(enc_pos):
                8390325]
     """
     # after target movement (Jul19)
+    """
     tar_bds = [0,
                1834288,
                2262206,
@@ -287,6 +288,25 @@ def get_90target_name(enc_pos):
                7563322,
                7993773,
                8424225]
+    """
+    # table updated on July 31, actual change when?
+    tar_bds = [0,
+               18378388,
+               22665852,
+               28408796,
+               32707544,
+               37006292,
+               41305036,
+               45603784,
+               49902532,
+               54217072,
+               58531616,
+               62846160,
+               67160704,
+               71475248,
+               75779632,
+               80092480,
+               84405336]
 
     tar_name = ["Home", 
                 "Halo",
@@ -308,7 +328,7 @@ def get_90target_name(enc_pos):
 
     bds_close = min(tar_bds, key=lambda x:abs(x-float(enc_pos)))
 
-    if abs(float(enc_pos)-bds_close) > 100:
+    if abs(float(enc_pos)-bds_close) > 200:
         return "Unknown"
     else:
         tar_index = tar_bds.index(bds_close)
