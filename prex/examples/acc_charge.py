@@ -79,8 +79,9 @@ def get_info_all():
     parser = argparse.ArgumentParser(description="", usage=get_usage())
     parser.add_argument("--run", type=str, help="run range")
     parser.add_argument("--list", type=str, help="use run list file")
-    # Devi changed this to default to only selecting Good Runs (for safety)
-    parser.add_argument("--goodrun", type=bool, help="select only runs marked as Good", default=True)
+    # However this script is to be used by shift crew to get idea about the time to change IHWP status
+    # the default status needs to be False. WAC can copy the script to his/her personal folder and change the default
+    parser.add_argument("--goodrun", type=bool, help="select only runs marked as Good", default=False)
     args = parser.parse_args()
 
     # run list
@@ -137,6 +138,9 @@ def get_info_all():
     for run in result:
 
         runno = str(run.number)
+        helFlipRate = 120.0
+        if run.number >= 3876:
+          helFlipRate = 240.0
         dd[runno] = {}
 
         # from db 
@@ -189,7 +193,7 @@ def get_info_all():
 
             if length is None:
                 # use prompt Nevent instead
-                length = float(summary_output[2]) * 1.0/120
+                length = float(summary_output[2]) * 1.0/helFlipRate
 
             # good charge from prompt output
             if 'nan' in summary_output[3]:
@@ -197,7 +201,7 @@ def get_info_all():
                 prompt_time = "0"
                 charge2 = "0"
             else:
-                prompt_time = float(summary_output[2]) * float(summary_output[3])*0.01 * 1.0/120
+                prompt_time = float(summary_output[2]) * float(summary_output[3])*0.01 * 1.0/helFlipRate
                 charge2 = float(prompt_time) * float(summary_output[4])
 
             # calculate charge all (from epics)

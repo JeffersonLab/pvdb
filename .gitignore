@@ -1,6 +1,7 @@
 *~
 *.py[cod]
 *.pkl
+*.txt
 
 # libraries and helper
 *.so
