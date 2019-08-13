@@ -28,6 +28,7 @@ class ParityConditions(object):
     BMW = 'bmw'
     FEEDBACK = 'feedback'
     FFB = 'ffb'
+    FLIP_STATE = 'flip_state'
 
 def create_condition_types(db):
     """
@@ -68,3 +69,4 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.BMW, ConditionType.STRING_FIELD, "BMW ON/OFF")
     create_condition_type(ParityConditions.FEEDBACK, ConditionType.STRING_FIELD, "Aq feedback ON/OFF")
     create_condition_type(ParityConditions.FFB, ConditionType.STRING_FIELD, "Fast feedback ON/OFF")
+    create_condition_type(ParityConditions.FLIP_STATE, ConditionType.STRING_FIELD, "spin flipper setting")

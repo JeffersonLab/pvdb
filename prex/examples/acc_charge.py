@@ -202,7 +202,10 @@ def get_info_all():
                 charge2 = "0"
             else:
                 prompt_time = float(summary_output[2]) * float(summary_output[3])*0.01 * 1.0/helFlipRate
-                charge2 = float(prompt_time) * float(summary_output[4])
+                if run.number >= 3876:
+                  charge2 = float(prompt_time) * float(summary_output[4]) * 2
+                else:
+                  charge2 = float(prompt_time) * float(summary_output[4])
 
             # calculate charge all (from epics)
             charge1 = float(avg_cur) * float(length)

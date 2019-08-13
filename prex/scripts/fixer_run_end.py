@@ -51,7 +51,7 @@ def update_run(run_number):
         print ("Run length  :\t %s" % run_length)
         print ("Event rate  :\t %s" % event_rate)
     else:
-        print "Update coda run info"
+        print "Update coda run info", run.number
         run.start_time = conditions["run_start_time"]
         run.end_time = conditions["run_end_time"]
         db.add_condition(run, DefaultConditions.RUN_LENGTH, run_length, True)

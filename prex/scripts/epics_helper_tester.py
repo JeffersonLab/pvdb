@@ -31,11 +31,12 @@ epics_list = {
     "pcrex45BDSPOS.VAL":ParityConditions.TARGET_45ENCODER,
     "pcrex90BDSPOS.VAL":ParityConditions.TARGET_90ENCODER,
     "IGL1I00OD16_16":ParityConditions.IHWP,
-    "psub_pl_pos":ParityConditions.RQWP,
+    "psub_pl_pos":ParityConditions.RHWP,
     "HWienAngle":ParityConditions.HWIEN,
     "VWienAngle":ParityConditions.VWIEN,
     "HELPATTERNd":ParityConditions.HELICITY_PATTERN,
-    "HELFREQ":ParityConditions.HELICITY_FREQUENCY
+    "HELFREQ":ParityConditions.HELICITY_FREQUENCY,
+    "FlipState":ParityConditions.FLIP_STATE
 }
 
 def get_run_conds():
@@ -66,6 +67,8 @@ def get_end_run_conds(run):
         end_time_str = now_time.strftime("%Y-%m-%d %H:%M:%S")
 
     for epics_name, cond_name in epics_list.iteritems():
+        if "encoder" in cond_name:
+            continue
         # Get average beam current
         if "current" in cond_name:
             try:
@@ -116,8 +119,8 @@ def get_end_run_conds(run):
             except Exception as e:
                 conditions[cond_name] = "-999"
 
-    # Get target type condition
-    conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], conditions[ParityConditions.TARGET_90ENCODER])
+    # PREX target type name
+    #conditions["target_type"] = get_PREX_target_name(conditions[ParityConditions.TARGET_45ENCODER], conditions[ParityConditions.TARGET_90ENCODER])
     return conditions
 
 def mya_get_run_conds(run, log):
@@ -193,8 +196,9 @@ def mya_get_run_conds(run, log):
 def print_conds():
     # used for test
     conditions = get_run_conds()
-#    print conditions[ParityConditions.BEAM_ENERGY]
-    print conditions["target_type"]
+    #    print conditions[ParityConditions.BEAM_ENERGY]
+    #    print conditions["target_type"]
+    print conditions
 
 def get_PREX_target_name(enc_pos45, enc_pos90):
 
@@ -217,7 +221,7 @@ def get_45target_name(enc_pos):
     if enc_pos == "-999":
         return "Invalid"
 
-    tar_bds = [-100,
+    tar_bds = [13,
                2021386,
                2479033,
                2636350,
@@ -229,7 +233,7 @@ def get_45target_name(enc_pos):
                 "Tungsten 0.3%",
                 "Pb 0.9%",
                 "Carbon 0.25%",
-                "Carbon Hole (Warm)"]
+                "Carbon Hole"]
 
     bds_close = min(tar_bds, key=lambda x:abs(x-float(enc_pos)))
 
@@ -248,7 +252,8 @@ def get_90target_name(enc_pos):
     if enc_pos == "-999":
         return "Invalid"
         
-    tar_bds = [-100,
+    """
+    tar_bds = [0,
                1800388,
                2228306,
                2801491,
@@ -265,6 +270,67 @@ def get_90target_name(enc_pos):
                7529422,
                7959873,
                8390325]
+    """
+    # after target movement (Jul19)
+    """
+    tar_bds = [0,
+               1834288,
+               2262206,
+               2835391,
+               3264435,
+               3693479,
+               4122523,
+               4551567,
+               4980611,
+               5411232,
+               5841853,
+               6272473,
+               6703094,
+               7133715,
+               7563322,
+               7993773,
+               8424225]
+    """
+
+    # table updated on July 31, actual change when?
+    """
+    tar_bds = [0,
+               18378388,
+               22665852,
+               28408796,
+               32707544,
+               37006292,
+               41305036,
+               45603784,
+               49902532,
+               54217072,
+               58531616,
+               62846160,
+               67160704,
+               71475248,
+               75779632,
+               80092480,
+               84405336]
+    """
+
+    # Updated on Aug. 7, effective from run 3903
+    tar_bds = [0,
+               18152388,
+               22439852,
+               28182796,
+               32481544,
+               36780292,
+               41079036,
+               45377784,
+               49676532,
+               53991072,
+               58305616,
+               62620160,
+               66934704,
+               71249248,
+               75553632,
+               79866480,
+               84179336]
 
     tar_name = ["Home", 
                 "Halo",
@@ -286,7 +352,7 @@ def get_90target_name(enc_pos):
 
     bds_close = min(tar_bds, key=lambda x:abs(x-float(enc_pos)))
 
-    if abs(float(enc_pos)-bds_close) > 100:
+    if abs(float(enc_pos)-bds_close) > 200:
         return "Unknown"
     else:
         tar_index = tar_bds.index(bds_close)

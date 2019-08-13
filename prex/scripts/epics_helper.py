@@ -35,7 +35,8 @@ epics_list = {
     "HWienAngle":ParityConditions.HWIEN,
     "VWienAngle":ParityConditions.VWIEN,
     "HELPATTERNd":ParityConditions.HELICITY_PATTERN,
-    "HELFREQ":ParityConditions.HELICITY_FREQUENCY
+    "HELFREQ":ParityConditions.HELICITY_FREQUENCY,
+    "FlipState":ParityConditions.FLIP_STATE
 }
 
 def get_run_conds():
@@ -195,8 +196,9 @@ def mya_get_run_conds(run, log):
 def print_conds():
     # used for test
     conditions = get_run_conds()
-#    print conditions[ParityConditions.BEAM_ENERGY]
-    print conditions["target_type"]
+    #    print conditions[ParityConditions.BEAM_ENERGY]
+    #    print conditions["target_type"]
+    print conditions
 
 def get_PREX_target_name(enc_pos45, enc_pos90):
 
