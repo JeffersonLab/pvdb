@@ -14,7 +14,7 @@ class WacTool(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="WAC DB TOOL")
 
-        self.set_size_request(350,450)
+        self.set_size_request(350,500)
         self.timeout_id = None
         self.set_border_width(10)
 
@@ -25,21 +25,21 @@ class WacTool(Gtk.Window):
         # First, run number 
         fixed = Gtk.Fixed()
         lbl = Gtk.Label("Run Number:")
-        fixed.put(lbl, 25, 55)
+        fixed.put(lbl, 25, 35)
         self.entry1 = Gtk.Entry()
-        fixed.put(self.entry1, 125, 50)
+        fixed.put(self.entry1, 125, 30)
         button1 = Gtk.Button("Connect")
         button1.connect("clicked", self.on_connect, self.entry1)
-        fixed.put(button1, 300, 50)
+        fixed.put(button1, 300, 30)
 
         lbl2 = Gtk.Label("Run Type:")
-        fixed.put(lbl2, 25, 100)
+        fixed.put(lbl2, 25, 80)
 
         self.text2 = Gtk.Entry()
-        fixed.put(self.text2, 125, 100)
+        fixed.put(self.text2, 125, 80)
 
         type_store = Gtk.ListStore(str)
-        run_types = ["Production", "Calibration", "Pedestal", "Test", "Junk", "Cosmics", "Other"]
+        run_types = ["Production", "Parityscan", "Calibration", "Pedestal", "Cosmics", "A_T", "Test", "Junk", "Other"]
         for run_type in run_types:
             type_store.append([run_type])
 
@@ -49,7 +49,7 @@ class WacTool(Gtk.Window):
         column = Gtk.TreeViewColumn("Select New Run Types", rendererText, text=0)
         treeView.append_column(column)
 
-        fixed.put(treeView, 127, 140)
+        fixed.put(treeView, 127, 120)
 
 #        self.selection.set_selectioin_function(self.select_function)
         self.selection = treeView.get_selection()
@@ -57,7 +57,7 @@ class WacTool(Gtk.Window):
 
         #### RUN FLAG ###
         lbl3 = Gtk.Label("Run Flag:")
-        fixed.put(lbl3, 25, 370)
+        fixed.put(lbl3, 25, 400)
 
         #hidden for the inital value
         self.rbutton0 = Gtk.RadioButton.new_with_label_from_widget(None, "None")
@@ -79,10 +79,10 @@ class WacTool(Gtk.Window):
         self.rbutton4.set_label("Suspicous")
         self.rbutton4.connect("toggled", self.on_rbutton_toggled, "Suspicious")
 
-        fixed.put(self.rbutton1, 110, 370)
-        fixed.put(self.rbutton2, 180, 370)
-        fixed.put(self.rbutton3, 270, 370)
-        fixed.put(self.rbutton4, 330, 370)
+        fixed.put(self.rbutton1, 110, 400)
+        fixed.put(self.rbutton2, 180, 400)
+        fixed.put(self.rbutton3, 270, 400)
+        fixed.put(self.rbutton4, 330, 400)
         # Save and exit
         ok_button = Gtk.Button("SAVE")
         ok_button.connect("clicked", self.on_ok_clicked, self.entry1)
@@ -92,8 +92,8 @@ class WacTool(Gtk.Window):
         cancel_button.connect("clicked", self.on_cancel_clicked)
         cancel_button.set_size_request(160, 10)
 
-        fixed.put(ok_button, 20, 420)
-        fixed.put(cancel_button, 190, 420)
+        fixed.put(ok_button, 50, 440)
+        fixed.put(cancel_button, 220, 440)
 
         self.add(fixed)
 
