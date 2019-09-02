@@ -8,8 +8,8 @@ void DrawChargeMon()
   string date, time;
   double charge0, charge1;
 
-  TH1F* hsum = new TH1F("hsum", "Charge total vs run", 1400, 3100+0.5, 4500+0.5);
-  TH1F* hsum1 = new TH1F("hsum1", "Good charge total vs run", 1400, 3100+0.5, 4500+0.5);
+  TH1F* hsum = new TH1F("hsum", "Charge total vs run", 1900, 3100+0.5, 5000+0.5);
+  TH1F* hsum1 = new TH1F("hsum1", "Good charge total vs run", 1900, 3100+0.5, 5000+0.5);
 
   // for debugging/sanity check
   auto tg = new TGraph();

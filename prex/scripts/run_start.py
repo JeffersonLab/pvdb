@@ -225,6 +225,9 @@ def update_parity_coda_conditions(context, parse_result):
     if parse_result.experiment_name is not None:
         conditions.append((ParityConditions.EXPERIMENT, parse_result.experiment_name))
 
+    # Arm flag (default set to 0)
+    conditions.append((ParityConditions.ARM_FLAG, 0))
+
     # Run type condition
     if parse_result.run_type is not None:
         conditions.append((DefaultConditions.RUN_TYPE, parse_result.run_type))

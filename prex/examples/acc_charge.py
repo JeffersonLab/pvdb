@@ -152,18 +152,18 @@ def get_info_all():
         run_type = run.get_condition_value("run_type")
         target_type = run.get_condition_value("target_type")
         run_flag = run.get_condition_value("run_flag")
+        arm_flag = run.get_condition_value("arm_flag")
 
         pass_cut = True
 
         if run_type is None or run_type not in ['Production']:
             pass_cut = False
         if target_type is None or '208Pb' not in target_type:
-#        if target_type is None or '208Pb2' not in target_type:
             pass_cut = False
 
         good_run_flag = False
         # Tight cut
-        if run_flag is not None and run_flag == 'Good':
+        if run_flag is not None and run_flag != 'Bad':
             good_run_flag = True
 
         if args.goodrun:
