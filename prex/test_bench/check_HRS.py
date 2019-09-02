@@ -1,11 +1,15 @@
 import os
 import sys
+<<<<<<< HEAD
 import subprocess
 from datetime import datetime
+=======
+>>>>>>> b32afcfced2786729e3c978758c0902cece8ecdd
 
 import rcdb
 from rcdb.provider import RCDBProvider
 
+<<<<<<< HEAD
 LHRS_ref = {
     "LQ1":118.50,
     "LQ2":407.70,
@@ -26,12 +30,19 @@ def get_HRS_info(brun, erun):
 
 #    query_str = "(run_type != 'Junk' and run_type != 'Test' and run_type != 'Cosmics') and '208Pb' in target_type"
     query_str = "run_type == 'Production' and '208Pb' in target_type"
+=======
+def get_HRS_info(brun, erun):
+    dd = {}
+
+    query_str = "(run_type != 'Junk' and run_type != 'Test') and '208Pb' in target_type"
+>>>>>>> b32afcfced2786729e3c978758c0902cece8ecdd
     con_str = "mysql://rcdb@hallcdb.jlab.org:3306/a-rcdb"
     db = rcdb.RCDBProvider(con_str)
     result = db.select_runs(query_str, brun, erun)
 
     for run in result:
         run_num = str(run.number)
+<<<<<<< HEAD
         start_time = datetime.strftime(run.start_time, "%Y-%m-%d %H:%M:%S")
         end_time = datetime.strftime(run.end_time, "%Y-%m-%d %H:%M:%S")
 
@@ -117,6 +128,20 @@ def check_stability(dd, list_sngL, list_sngR, list_twoarm):
             list_sngR.append(key)
 
 def get_halog_data(run_num, dd, this_time):
+=======
+        print run_num
+
+        dd[run_num] = {}
+        get_halog_data(run_num, dd, "start")
+        get_halog_data(run_num, dd, "end")
+
+    print dd
+
+
+def get_halog_data(run_num, dd, this_time):
+    dd[run_num][this_time] = {}
+
+>>>>>>> b32afcfced2786729e3c978758c0902cece8ecdd
     if this_time == 'start':
         epics_file = "/adaqfs/home/apar/epics/runfiles/halog_start_" + run_num + ".epics"
     elif this_time == 'end':
@@ -126,6 +151,7 @@ def get_halog_data(run_num, dd, this_time):
         sys.exit(1)
 
     if not os.path.exists(epics_file):
+<<<<<<< HEAD
         #print this_time, "epics file does not exit for ", run_num
         return 1
 
@@ -148,6 +174,12 @@ def get_halog_data(run_num, dd, this_time):
     """
 
     with open(epics_file, 'rb') as f:
+=======
+        print "epics file does not exit for ", run_num
+        return
+
+    with open(start_file, 'rb') as f:
+>>>>>>> b32afcfced2786729e3c978758c0902cece8ecdd
         for line in f:
             if "Left Arm Q1 power supply current" in line:
                 dd[run_num][this_time]['LQ1'] = line.split(":")[1].strip()
@@ -165,6 +197,7 @@ def get_halog_data(run_num, dd, this_time):
                 dd[run_num][this_time]['RD1'] = line.split(":")[1].strip()
             if "Right Arm Q3 power supply current" in line:
                 dd[run_num][this_time]['RQ3'] = line.split(":")[1].strip()
+<<<<<<< HEAD
     return 0
 
 def get_epics_data(time_str, this_time, run_num, dd):
@@ -194,6 +227,8 @@ def get_epics_data(time_str, this_time, run_num, dd):
         except Exception as e:
             print e
 
+=======
+>>>>>>> b32afcfced2786729e3c978758c0902cece8ecdd
 
 if __name__ == '__main__':
     brun = sys.argv[1]
