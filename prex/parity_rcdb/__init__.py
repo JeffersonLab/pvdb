@@ -30,6 +30,7 @@ class ParityConditions(object):
     FFB = 'ffb'
     FLIP_STATE = 'flip_state'
     ARM_FLAG = 'arm_flag'
+    RESPIN_COMMENT = 'respin_comment'
 
 def create_condition_types(db):
     """
@@ -72,3 +73,4 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.FFB, ConditionType.STRING_FIELD, "Fast feedback ON/OFF")
     create_condition_type(ParityConditions.FLIP_STATE, ConditionType.STRING_FIELD, "spin flipper setting")
     create_condition_type(ParityConditions.ARM_FLAG, ConditionType.INT_FIELD, "0: both arm, 1: right arm only, 2: left arm only")
+    create_condition_type(ParityConditions.RESPIN_COMMENT, ConditionType.STRING_FIELD, "comment from respin analysis")
