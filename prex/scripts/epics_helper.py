@@ -221,12 +221,23 @@ def get_45target_name(enc_pos):
     if enc_pos == "-999":
         return "Invalid"
 
+    """
+    # PREX2
     tar_bds = [13,
                2021386,
                2479033,
                2636350,
                2793666,
                2959982]
+    """
+
+    # CREX (updated on Dec 6, 2019)
+    tar_bds = [13,
+               14438475,
+               17707382,
+               18831069,
+               19954756,
+               21078440]
 
     tar_name = ["Home", 
                 "WaterCell 2.77%",
@@ -313,7 +324,9 @@ def get_90target_name(enc_pos):
                84405336]
     """
 
+    """
     # Updated on Aug. 7, effective from run 3903
+    # Last update for PREX2
     tar_bds = [0,
                18152388,
                22439852,
@@ -335,6 +348,44 @@ def get_90target_name(enc_pos):
     tar_name = ["Home", 
                 "Halo",
                 "40Ca 6%",
+                "Carbon Hole (Cold)",
+                "D-208Pb10-D",
+                "D-208Pb9-D",
+                "D-208Pb8-D",
+                "D-208Pb7-D",
+                "D-208Pb6-D",
+                "D-208Pb5-D",
+                "D-208Pb4-D",
+                "D-208Pb3-D",
+                "D-208Pb2-D",
+                "Carbon 1%",
+                "C-208Pb-C",
+                "D-Pb-D",
+                "C-Pb-C"]
+    """
+
+    # CREX (updated on Dec 6, 2019)
+    tar_bds = [0,
+               12961050,
+               16022300,
+               20122763,
+               23192068,
+               26261373,
+               29330678,
+               32399983,
+               35469289,
+               38549873,
+               41630457,
+               44711040,
+               47791624,
+               50872208,
+               53945539,
+               57024914,
+               60104290]
+
+    tar_name = ["Home", 
+                "40Ca",
+                "48Ca",
                 "Carbon Hole (Cold)",
                 "D-208Pb10-D",
                 "D-208Pb9-D",
