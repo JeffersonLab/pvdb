@@ -364,6 +364,7 @@ def get_90target_name(enc_pos):
                 "C-Pb-C"]
     """
 
+    """
     # CREX (updated on Dec 6, 2019)
     tar_bds = [0,
                12961050,
@@ -382,6 +383,44 @@ def get_90target_name(enc_pos):
                53945539,
                57024914,
                60104290]
+
+    tar_name = ["Home", 
+                "40Ca",
+                "48Ca",
+                "Carbon Hole (Cold)",
+                "D-208Pb10-D",
+                "D-208Pb9-D",
+                "D-208Pb8-D",
+                "D-208Pb7-D",
+                "D-208Pb6-D",
+                "D-208Pb5-D",
+                "D-208Pb4-D",
+                "D-208Pb3-D",
+                "D-208Pb2-D",
+                "Carbon 1%",
+                "C-208Pb-C",
+                "D-Pb-D",
+                "C-Pb-C"]
+
+    """
+    # CREX (updated on Dec 12, 2019), effective from 5389
+    tar_bds = [0,
+               13163050,
+               16224300,
+               20324763,
+               23394068,
+               26463373,
+               29532678,
+               32601983,
+               35671289,
+               38751873,
+               41832457,
+               44913040,
+               47993624,
+               51074208,
+               54147539,
+               57226914,
+               60306290]
 
     tar_name = ["Home", 
                 "40Ca",
