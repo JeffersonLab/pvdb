@@ -35,7 +35,7 @@ def get_list():
     parser = argparse.ArgumentParser(description=description, usage=get_usage())
     parser.add_argument("--run", help="single run number or range 3000-3100", required=True)
     parser.add_argument("--type", type=str, help="Production, Calibration, Test, Junk (if you want..why not)")
-    parser.add_argument("--target", type=str, help="208Pb, D-Pb-D, C-Pb-C, Carbon, Calcium")
+    parser.add_argument("--target", type=str, help="208Pb, D-Pb-D, C-Pb-C, Carbon, 48Ca")
     parser.add_argument("--nevt", type=int, help="Minimum number of events")
     parser.add_argument("--ihwp", type=str, help="Insertable 1/2 wave plate IN or OUT")
     parser.add_argument("--rhwp", type=int, help="Rotating 1/2 wave plate")
@@ -85,6 +85,14 @@ def get_list():
         else:
             query_str = query_str + " and " + select_str
 
+    # slug
+    if args.slug is not None:
+        select_str = "slug == %d" % args.slug
+        if query_str is None:
+            query_str = select_str
+        else:
+            query_str = query_str + " and " + select_str
+
     # IHWP IN/OUT
     if args.ihwp is not None:
         select_str = "ihwp == '%s'" % args.ihwp
@@ -122,27 +130,27 @@ def get_list():
     # get result for the given run range
     result = db.select_runs("%s" % query_str, runs[0], runs[-1])
 
-    row = result.get_values(["run_type", "beam_current", "ihwp", "rhwp", "is_valid_run_end", "run_flag"])
+    row = result.get_values(["run_type", "beam_current", "slug", "ihwp", "rhwp", "is_valid_run_end", "run_flag"])
 
     # Print out the list
     fout = open('list.txt', 'wb')
     irow=0
     for run in result:
-        if row[irow][3] is None:
-            row[irow][3] = "None"
+        if row[irow][4] is None:
+            row[irow][4] = "None"
         else:
-            row[irow][3] = str(int(row[irow][3]))
+            row[irow][4] = str(int(row[irow][4]))
 
         if args.show:
             if irow == 0:
-                print >> fout, "# runnumber, run_type, avg_cur, IHWP, RHWP, run_end, run_flag"
+                print >> fout, "# runnumber, run_type, avg_cur, slug, IHWP, RHWP, run_end, run_flag"
 
-            ostr = ("%s \t %s \t %s \t %s \t %s \t %s \t %s" % (run.number, row[irow][0], row[irow][1], row[irow][2], row[irow][3], row[irow][4], row[irow][5]))
+            ostr = ("%s \t %s \t %s \t %s \t %s \t %s \t %s \t %s" % (run.number, row[irow][0], row[irow][1], row[irow][2], row[irow][3], row[irow][4], row[irow][5], row[irow][6]))
             print >> fout, ostr
 
             if args.debug:
                 if irow == 0:
-                    print "# runnumber, run_type, avg_cur, IHWP, RHWP, run_end, run_flag"
+                    print "# runnumber, run_type, avg_cur, slug, IHWP, RHWP, run_end, run_flag"
                 print ostr
         else:
             print >> fout, run.number
