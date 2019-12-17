@@ -9,7 +9,7 @@ from rcdb.provider import RCDBProvider
 from rcdb.model import Run
 from sqlalchemy import desc
 
-fDEBUG = False
+fDEBUG = True
 
 def get_summary_output(run_number):
 
@@ -44,8 +44,13 @@ def get_summary_output(run_number):
                 value = line.split("Mean:")[1].split(None)[0]
                 summary.append(value)
                 n += 1
-            elif run_number>=str(3583):
+            elif run_number>=str(3583) and run_number<str(5000):
               if "cav4cQ" in line:
+                value = line.split("Mean:")[1].split(None)[0]
+                summary.append(value)
+                n += 1
+            elif run_number>str(5000):
+              if "bcm_an_us" in line:
                 value = line.split("Mean:")[1].split(None)[0]
                 summary.append(value)
                 n += 1
@@ -115,7 +120,7 @@ def get_info_all():
         # no given run range/list 
         run_query = db.session.query(Run)
         last_run = run_query.order_by(desc(Run.number)).first().number
-        runs = [x for x in range(3130, int(last_run)+1)]
+        runs = [x for x in range(5300, int(last_run)+1)]
         print "For all production runs ", runs[0], runs[-1]
 
     # search query
@@ -144,7 +149,8 @@ def get_info_all():
 
         runno = str(run.number)
         helFlipRate = 120.0
-        if run.number >= 3876:
+        # PREX2
+        if run.number >= 3876 and run.number < 5000:
           helFlipRate = 240.0
         dd[runno] = {}
 
@@ -158,7 +164,7 @@ def get_info_all():
 
         if run_type is None or run_type not in ['Production']:
             pass_cut = False
-        if target_type is None or '208Pb' not in target_type:
+        if target_type is None or '48Ca' not in target_type:
             pass_cut = False
 
         good_run_flag = False
@@ -214,7 +220,7 @@ def get_info_all():
                     charge2 = "0"
                 else:
                     prompt_time = float(summary_output[2]) * float(summary_output[3])*0.01 * 1.0/helFlipRate
-                    if run.number >= 3876:
+                    if run.number >= 3876 and run.number < 5000:
                         charge2 = float(prompt_time) * float(summary_output[4]) * 2
                     else:
                         charge2 = float(prompt_time) * float(summary_output[4])
