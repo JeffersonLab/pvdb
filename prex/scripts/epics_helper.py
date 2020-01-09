@@ -138,7 +138,7 @@ def mya_get_run_conds(run, log):
             continue
         if "current" in cond_name:
             try:
-                cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "1:100", "-l", epics_name]
+                cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "1:200", "-l", epics_name]
                 cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)
                 n = 0
                 for line in cond_out.stdout:
