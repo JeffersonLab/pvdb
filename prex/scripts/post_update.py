@@ -100,7 +100,7 @@ def update(run_number, update_parts, context):
                 start_time_str = datetime.strftime(run.start_time, "%Y-%m-%d %H:%M:%S")
                 end_time_str = datetime.strftime(run.end_time, "%Y-%m-%d %H:%M:%S")
                 if "current" in cond_name:
-                    cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "1:100", "-l", epics_name]
+                    cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "1:200", "-l", epics_name]
                     cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)
 
                     n = 0

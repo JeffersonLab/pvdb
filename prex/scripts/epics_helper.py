@@ -72,7 +72,7 @@ def get_end_run_conds(run):
         # Get average beam current
         if "current" in cond_name:
             try:
-                cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "0:100", "-l", epics_name]
+                cmds = ["myStats", "-b", start_time_str , "-e", end_time_str, "-c", epics_name, "-r", "0:200", "-l", epics_name]
                 cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)
                 n = 0
                 for line in cond_out.stdout:
