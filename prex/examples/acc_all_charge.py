@@ -164,10 +164,10 @@ def get_info_all():
 
         if run_type is None or run_type not in ['Production']:
             pass_cut = False
-        if target_type is None or '48Ca' not in target_type:
-          if run.get_condition_value("slug") < 3999:
-            print "Non-production target run"
-            print run.get_condition_value("target_type")
+### MAJOR Change - all targets count 
+        #if target_type is None or '48Ca' not in target_type:
+### AT Running scenario
+        if target_type is None:
             pass_cut = False
 
         good_run_flag = False

@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import datetime
+
 import argparse
 
 import rcdb
@@ -136,7 +137,7 @@ def get_info_all():
     dd = {}
 
     # Output file
-    fout = open('out.txt', 'wb')
+    fout = open('out_time.txt', 'wb')
 
     nrun = 0
     ngood = 0
@@ -166,8 +167,6 @@ def get_info_all():
             pass_cut = False
         if target_type is None or '48Ca' not in target_type:
           if run.get_condition_value("slug") < 3999:
-            print "Non-production target run"
-            print run.get_condition_value("target_type")
             pass_cut = False
 
         good_run_flag = False
@@ -211,9 +210,11 @@ def get_info_all():
                 print "=== Prompt summary output does not exist for run: ", runno, ", skip this run for Good charge"
                 charge2 = "0"
                 prompt_time = "0"
-                start_time = run.start_time
+                start_time = " "+run.start_time.__str__()
+                end_time = " "+run.start_time.__str__()
             else:
                 start_time = summary_output[0]
+                end_time = summary_output[1]
                 if length is None:
                     # use prompt Nevent instead
                     length = float(summary_output[2]) * 1.0/helFlipRate
@@ -248,11 +249,17 @@ def get_info_all():
             dd[runno]["charge_good"] = charge2
             dd[runno]["eff_time"] = prompt_time
             dd[runno]["start_time"] = start_time
+            dd[runno]["end_time"] = end_time
+            dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(end_time, " %Y-%m-%d %H:%M:%S").timetuple())
+
+
         else:
             #print runno, run_type, target_type, run_flag
             dd[runno]["charge_all"] = "0"
             dd[runno]["charge_good"] = "0"
             dd[runno]["start_time"] = run.start_time
+            dd[runno]["end_time"] = run.start_time
+            dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
 
         # Sum over all production runs (with 208Pb target)
         charge_sum += float(charge1)
@@ -266,7 +273,7 @@ def get_info_all():
             ngood += 1
             good_sum += float(dd[runno]["charge_good"])
 
-        print >> fout, runno, dd[runno]["start_time"], dd[runno]["charge_all"], dd[runno]["charge_good"]
+        print >> fout, runno, dd[runno]["end_time"], dd[runno]["epoch_time"], dd[runno]["charge_all"], dd[runno]["charge_good"]
 
     print
     print ("Total runs: %d,\t\tTotal charge sum: %.2f C" %(nrun, float(charge_sum)*1.e-6))

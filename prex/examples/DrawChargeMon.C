@@ -8,8 +8,8 @@ void DrawChargeMon()
   string date, time;
   double charge0, charge1;
 
-  TH1F* hsum = new TH1F("hsum", "Charge total vs run", 1300, 5350+0.5,6500+0.5);
-  TH1F* hsum1 = new TH1F("hsum1", "Good charge total vs run", 1300, 5350+0.5, 6500+0.5);
+  TH1F* hsum = new TH1F("hsum", "Charge total vs run", 1300, 5400+0.5,6550+0.5);
+  TH1F* hsum1 = new TH1F("hsum1", "Good charge total vs run", 1300, 5400+0.5, 6550+0.5);
 
   // for debugging/sanity check
   auto tg = new TGraph();
@@ -22,32 +22,51 @@ void DrawChargeMon()
 
   int first_run;
   int last_run;
+  double lastEntry0 = 0.0;
+  double lastEntry1 = 0.0;
   while( ifstr >> run >> date >> time >> charge0 >> charge1 )
-    {
-      
-      if(n<1)
-	first_run = run;
-	  
-      if(charge1 > charge0)
-      	cout << run << " " << charge0 << " " << charge1 << endl;
+  {
 
-      charge0 = charge0 * 1.e-6;
-      charge1 = charge1 * 1.e-6;
+    if(n<1)
+      first_run = run;
 
-      sum0 = sum0 + charge0;
-      sum1 = sum1 + charge1;
+    if(charge1 > charge0)
+      cout << "run " << run << " has total charge<good charge: " << charge0 << " " << charge1 << endl;
 
-      hsum->Fill(run, sum0);
-      hsum1->Fill(run, sum1);
+    charge0 = charge0 * 1.e-6;
+    charge1 = charge1 * 1.e-6;
 
-      tg->SetPoint(n, run, charge0);
-      tg1->SetPoint(n, run, charge1);
+    sum0 = sum0 + charge0;
+    sum1 = sum1 + charge1;
 
-      tg_diff->SetPoint(n, run, sum0 - sum1);
+    hsum->Fill(run, sum0);
+    hsum1->Fill(run, sum1);
 
-      last_run = run;      
-      n++;
+    tg->SetPoint(n, run, charge0);
+    tg1->SetPoint(n, run, charge1);
+
+    tg_diff->SetPoint(n, run, sum0 - sum1);
+
+    last_run = run;      
+    n++;
+  }
+
+  for (Int_t j = 0 ; j < hsum->GetNbinsX() ; j++) {
+    if (hsum->GetBinContent(j) != 0) {
+      lastEntry0 = hsum->GetBinContent(j);
+    }   
+    else {
+      hsum->Fill(hsum->GetBinCenter(hsum->GetBin(j)),lastEntry0);
     }
+  }
+  for (Int_t j = 0 ; j < hsum1->GetNbinsX() ; j++) {
+    if (hsum1->GetBinContent(j) != 0) {
+      lastEntry1 = hsum1->GetBinContent(j);
+    }   
+    else {
+      hsum1->Fill(hsum1->GetBinCenter(hsum1->GetBin(j)),lastEntry1);
+    }
+  }
 
   /*
   TCanvas* c1 = new TCanvas("c1", "c1");
