@@ -108,8 +108,8 @@ void DrawChargeMon_projected()
       }
     }
   }
-  ofstr << "Shift,\tGood Charge,\tTotal Good Charge,\tTime Start,\tTime End" << std::endl;
-  ofstr << (Int_t)hsum2->GetBinCenter(0) << ",\t" << 0 << ",\t" << 0 << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)htime->GetXaxis()->GetBinLowEdge(0))) << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)htime->GetXaxis()->GetBinLowEdge(0)+(Int_t)htime->GetXaxis()->GetBinWidth(0))) << std::endl;
+  ofstr << "Shift,\tGood Charge,\tTotal Good Charge,\tTime Start,\tTime End,\tEpoch Start,\tEpoch End" << std::endl;
+  ofstr << (Int_t)hsum2->GetBinCenter(0) << ",\t" << 0 << ",\t" << 0 << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)htime->GetXaxis()->GetBinLowEdge(0))) << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)htime->GetXaxis()->GetBinLowEdge(0)+(Int_t)htime->GetXaxis()->GetBinWidth(0))) << ",\t" << (Int_t)htime->GetXaxis()->GetBinLowEdge(0) << ",\t" << (Int_t)htime->GetXaxis()->GetBinLowEdge(0)+(Int_t)htime->GetXaxis()->GetBinWidth(0) << std::endl;
   //ofstr << (Int_t)hsum2->GetBinCenter(0) << ",\t" << 0 << ",\t" << 0 << ",\t" << (Int_t)htime->GetXaxis()->GetBinLowEdge(0) << ",\t" << (Int_t)htime->GetXaxis()->GetBinLowEdge(0)+(Int_t)htime->GetXaxis()->GetBinWidth(0) << std::endl;
       
   for (Int_t j = 0 ; j < hsum2->GetNbinsX() ; j++) {
@@ -138,13 +138,15 @@ void DrawChargeMon_projected()
         
         ofstr << (Int_t)hsum2->GetBinCenter(j-1) << ",\t";
         ofstr << setprecision(3) << setw(5) << setfill('0') << (lastEntry - hsum2->GetBinContent(j-1)) << ",\t" << setprecision(4) << integrated_good_charge;
-        ofstr << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)starttime)) << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)endtime)) << std::endl;
+        ofstr << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)starttime)) << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)endtime));
+        ofstr << ",\t" << (Int_t)starttime << ",\t" << (Int_t)endtime << std::endl;
       }
       if (j>1 && hsum1->GetBinContent(j-1)!=0 && 0.0 <= (lastEntry - hsum1->GetBinContent(j-1))) {
         integrated_good_charge+=(lastEntry - hsum1->GetBinContent(j-1));
         ofstr << (Int_t)hsum1->GetBinCenter(j-1) << ",\t";
         ofstr << setprecision(3) << setw(4) << setfill('0') << (lastEntry - hsum1->GetBinContent(j-1)) << ",\t" << setprecision(4) << integrated_good_charge;
-        ofstr << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)starttime)) << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)endtime)) << std::endl;
+        ofstr << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)starttime)) << ",\t" << gSystem->GetFromPipe(Form("date --date='@%d'",(Int_t)endtime));
+        ofstr << ",\t" << starttime << ",\t" << (Int_t)endtime << std::endl;
       }
     }
     else {
