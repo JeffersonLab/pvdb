@@ -251,7 +251,8 @@ def get_info_all():
             dd[runno]["start_time"] = start_time
             dd[runno]["end_time"] = end_time
             dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(end_time, " %Y-%m-%d %H:%M:%S").timetuple())
-
+            if dd[runno]["epoch_time"] > 2000000000.0:
+              dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
 
         else:
             #print runno, run_type, target_type, run_flag

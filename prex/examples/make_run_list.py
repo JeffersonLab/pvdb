@@ -37,6 +37,7 @@ def get_list():
     parser.add_argument("--type", type=str, help="Production, Calibration, Test, Junk (if you want..why not)")
     parser.add_argument("--target", type=str, help="208Pb, D-Pb-D, C-Pb-C, Carbon, 48Ca")
     parser.add_argument("--nevt", type=int, help="Minimum number of events")
+    parser.add_argument("--current", type=float, help="Minimum average current")
     parser.add_argument("--ihwp", type=str, help="Insertable 1/2 wave plate IN or OUT")
     parser.add_argument("--rhwp", type=int, help="Rotating 1/2 wave plate")
     parser.add_argument("--slug", type=int, help="slug number")
@@ -80,6 +81,14 @@ def get_list():
     # event count
     if args.nevt is not None:
         select_str = "event_count > %d" % (int(args.nevt))
+        if query_str is None:
+            query_str = select_str
+        else:
+            query_str = query_str + " and " + select_str
+
+    # minimum average current
+    if args.current is not None:
+        select_str = "beam_current > %f" % (float(args.current))
         if query_str is None:
             query_str = select_str
         else:
