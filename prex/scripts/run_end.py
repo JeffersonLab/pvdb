@@ -11,6 +11,7 @@ import glob
 from parity_rcdb import ParityConditions
 from parity_rcdb import parity_coda_parser
 import epics_helper
+import get_dpp_parity
 
 #rcdb
 import rcdb
@@ -80,6 +81,12 @@ def parse_end_run_info(run_number):
     charge = float(total_run_time.total_seconds()) * float(epics_conditions["beam_current"])
     epics_conditions["total_charge"] = charge
 
+    # Get dpp information
+    start_time_str = datetime.strftime(run.start_time, "%Y-%m-%d %H:%M:%S")
+    dpp_mean, dpp_sig = get_dpp_parity.get_dpp(start_time_str, end_time_str)
+    epics_conditions["dpp"] = dpp_mean;
+    epics_conditions["dpp_stdev"] = dpp_sig;
+
     if nevts is None:
         nevts = -1
         event_rate = -1
@@ -100,6 +107,8 @@ def parse_end_run_info(run_number):
         print("Helicity frequency:\t %s Hz" % (epics_conditions["helicity_frequency"]))
         print("IHWP:\t %s" % (epics_conditions["ihwp"]))
         print("Wien angle (H,V):\t %s, %s" % (epics_conditions["horizontal_wien"], epics_conditions["vertical_wien"]))
+        print("DPP:\t %s" % (epics_conditions["dpp"]))        
+        print("DPP sigma:\t %s" % (epics_conditions["dpp_stdev"]))
     else:
         # Add conditions to DB
         conditions = []
@@ -110,6 +119,10 @@ def parse_end_run_info(run_number):
         conditions.append((DefaultConditions.EVENT_COUNT, nevts))
         conditions.append((DefaultConditions.EVENT_RATE, event_rate))
 
+        if dpp_mean is not None:
+            conditions.append((ParityConditions.DPP, epics_conditions["dpp"]))
+        if dpp_sig is not None:
+            conditions.append((ParityConditions.DPP_STDEV, epics_conditions["dpp_stdev"]))
         # Disabled (conditions not added to DB)
         # conditions.append(('evio_last_file', files))
         # conditions.append(('evio_file_count', num_files))

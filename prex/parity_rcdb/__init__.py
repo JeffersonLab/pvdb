@@ -31,6 +31,8 @@ class ParityConditions(object):
     FLIP_STATE = 'flip_state'
     ARM_FLAG = 'arm_flag'
     RESPIN_COMMENT = 'respin_comment'
+    DPP = "dpp"
+    DPP_STDEV = "dpp_stdev"
 
 def create_condition_types(db):
     """
@@ -74,3 +76,5 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.FLIP_STATE, ConditionType.STRING_FIELD, "spin flipper setting")
     create_condition_type(ParityConditions.ARM_FLAG, ConditionType.INT_FIELD, "0: both arm, 1: right arm only, 2: left arm only")
     create_condition_type(ParityConditions.RESPIN_COMMENT, ConditionType.STRING_FIELD, "comment from respin analysis")
+    create_condition_type(ParityConditions.DPP, ConditionType.FLOAT_FIELD, "Average dp/p")
+    create_condition_type(ParityConditions.DPP_STDEV, ConditionType.FLOAT_FIELD, "sigma of dp/p")
