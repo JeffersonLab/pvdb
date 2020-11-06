@@ -29,28 +29,25 @@ def get_summary_output(run_number):
             if "Start Time:" in line:
                 value = line.split('Time:')[1]
                 summary.append(value)
-            if "End Time:" in line:
+            elif "End Time:" in line:
                 value = line.split('Time:')[1]
                 summary.append(value)
-            if "Number of events processed" in line:
+            elif "Number of events processed" in line:
                 value = line.split(':')[1]
                 summary.append(value)
-            if "Percentage of good events" in line:
+            elif "Percentage of good events" in line:
                 value = line.split(None)[4]
                 summary.append(value)
             # Cameron: changed behavior of charge getter to select the correct BCM on 7/30/2019 (Kent changed it before)
-            if run_number<str(3583):
-              if "bcm_an_ds" in line:
+            elif run_number<str(3583) and "bcm_an_ds" in line:
                 value = line.split("Mean:")[1].split(None)[0]
                 summary.append(value)
                 n += 1
-            elif run_number>=str(3583) and run_number<str(5000):
-              if "cav4cQ" in line:
+            elif run_number>=str(3583) and run_number<str(5000) and "cav4cQ" in line:
                 value = line.split("Mean:")[1].split(None)[0]
                 summary.append(value)
                 n += 1
-            elif run_number>str(5000):
-              if "bcm_an_us" in line:
+            elif run_number>str(5000) and "bcm_an_us" in line:
                 value = line.split("Mean:")[1].split(None)[0]
                 summary.append(value)
                 n += 1
@@ -164,7 +161,8 @@ def get_info_all():
 
         if run_type is None or run_type not in ['Production']:
             pass_cut = False
-        if target_type is None or '48Ca' not in target_type:
+        if target_type is None or (run.number < 5000 and 'Pb' not in target_type) or (run.number > 5000 and '48Ca' not in target_type):
+        #if target_type is None or '48Ca' not in target_type:
           if run.get_condition_value("slug") < 3999:
             print "Non-production target run"
             print run.get_condition_value("target_type")

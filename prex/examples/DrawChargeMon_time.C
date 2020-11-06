@@ -6,7 +6,7 @@ void DrawChargeMon_time()
 
   ifstream ifstr("out_time.txt");
   string date, time;
-  double charge0, charge1, epoch;
+  double charge0, charge1, epoch_start, epoch;
 
   Int_t nEmpties = 0;
   Double_t lastEntry = 0.0;
@@ -46,7 +46,7 @@ void DrawChargeMon_time()
   */
 
   Int_t run = 0;
-  while( ifstr >> run >> date >> time >> epoch >> charge0 >> charge1 )
+  while( ifstr >> run >> date >> time >> epoch_start >> epoch >> charge0 >> charge1 )
     {
       
       epoch = (-1*1580599413.0 + epoch)/nSecs + offset;
@@ -150,7 +150,8 @@ void DrawChargeMon_time()
   gPad->SetGridx(1);
   gPad->SetGridy(1);
 
-  TLegend *leg = new TLegend(0.425, 0.125, 0.9, 0.375);
+  //TLegend *leg = new TLegend(0.425, 0.125, 0.9, 0.375);
+  TLegend *leg = new TLegend(0.1, 0.7, 0.55, 0.925);
   leg->AddEntry(hsum, Form("All Charge on Target %.2f C", sum0), "lf");
   //leg->AddEntry(hsum1, Form("Good charge after cuts %.2f C, Goal = %d C", sum1,goal), "lf");
   leg->AddEntry(hsum1, Form("Good charge after cuts %.2f C", sum1), "lf");

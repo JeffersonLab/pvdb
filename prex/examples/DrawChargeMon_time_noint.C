@@ -6,7 +6,7 @@ void DrawChargeMon_time_noint()
 
   ifstream ifstr("out_time.txt");
   string date, time;
-  double charge0, charge1, epoch;
+  double charge0, charge1, epoch_start, epoch;
 
   Int_t nEmpties = 0;
   Double_t lastEntry = 0.0;
@@ -18,8 +18,9 @@ void DrawChargeMon_time_noint()
 
   Double_t first_epoch = 0.0;
   Double_t last_epoch = 0.0;
-  Double_t final_epoch = 330; // or do = last_epoch+1; 
-  Double_t total_epoch = final_epoch; // or do = last_epoch+1+15; 
+  //Double_t final_epoch = 876;//-350;//460; // or do = last_epoch+1; 
+  Double_t final_epoch = 878;//-350;//460; // or do = last_epoch+1; 
+  Double_t total_epoch = final_epoch+15; // or do = last_epoch+1+15; 
   // 366 = number of shifts from Dec 4 - April 4 -> Add 15 for buffer space
   // 330 = number of shifts from Dec 4 - March 23
   // 105 = number of shifts from Dec 4 - January 8
@@ -49,20 +50,28 @@ void DrawChargeMon_time_noint()
   */
 
   Int_t run = 0;
-  while( ifstr >> run >> date >> time >> epoch >> charge0 >> charge1 )
+  while( ifstr >> run >> date >> time >> epoch_start >> epoch >> charge0 >> charge1 )
     {
       
       epoch = (-1*1580599413.0 + epoch)/nSecs + offset;
       if(n<1) 
-	{
-	  first_epoch = epoch;
-	  Printf("%f",first_epoch);
-	}
-	  
+      {
+        first_epoch = epoch;
+        Printf("%f",first_epoch);
+      }
+      // Summer break: 
+      //if (epoch > 350 && epoch < 750) { continue ; }
+      //if (epoch >= 750 ) { 
+        //epoch_start = epoch_start - 350; 
+        //epoch = epoch - 350; 
+        //unix_time = unix_time - 350*8*60*60;
+        //unix_time_start = unix_time_start - 350*8*60*60;
+      //}
+
       if(charge1 > charge0)
-	{
-	  cout << "run " << run << " has total charge<good charge: " << charge0 << " " << charge1 << endl;
-	}
+      {
+        cout << "run " << run << " has total charge<good charge: " << charge0 << " " << charge1 << endl;
+      }
 
       charge0 = charge0 * 1.e-6;
       charge1 = charge1 * 1.e-6;
@@ -106,7 +115,7 @@ void DrawChargeMon_time_noint()
     }
   }
 
-  TCanvas *cDrawChargeMon = new TCanvas("cDrawChargeMon","cDrawChargeMon", 1000, 600);
+  TCanvas *cDrawChargeMon = new TCanvas("cDrawChargeMon","cDrawChargeMon", 1000, 400); // 2000, 800
   hTotalCharge->SetFillStyle(3001);
   hTotalCharge->SetFillColor(kBlue);
 
@@ -149,7 +158,7 @@ void DrawChargeMon_time_noint()
   t->SetTextAlign(33);
   t->SetTextColor(kRed);
   t->SetTextFont(43);
-  t->SetTextSize(25);
+  t->SetTextSize(12); //25
   t->SetTextAngle(90);
   t->DrawText(7,max,"Commissioning");
   t->DrawText(37,max,"Hall C 1 pass");
@@ -159,10 +168,12 @@ void DrawChargeMon_time_noint()
   t->DrawText(158,max,"Target");
   t->DrawText(169,max,"Target");
   t->DrawText(188,max,""); // BLA, etc.
-  t->DrawText(209,max,"Hall B 1 pass");
-  t->DrawText(222,max,"Wien + Downtime");
+  t->DrawText(206,max,"Hall B 1 pass");
+  t->DrawText(220,max,"Wien + Downtime");
+  t->DrawText(245,max,"RF instability");
+  t->DrawText(350,max,"MEDCON 6");
 
-  Double_t needed_slope = (goal-sum1)/(final_epoch-current_epoch);
+  //Double_t needed_slope = (goal-sum1)/(final_epoch-current_epoch);
 
   // //  TLine* lineFuture = new TLine(current_epoch,sum1,current_epoch+14,needed_slope*14+sum1);
   // TArrow* lineFuture = new TArrow(current_epoch,sum1,current_epoch+9,needed_slope*9+sum1,0.04125,"|>");
@@ -176,15 +187,21 @@ void DrawChargeMon_time_noint()
   gPad->SetGridx(1);
   gPad->SetGridy(1);
 
-  TLegend *leg = new TLegend(0.7, 0.7, 0.99, 0.99);
+  //TLegend *leg = new TLegend(0.7, 0.7, 0.99, 0.99);
+  TLegend *leg = new TLegend(0.45, 0.30, 0.70, 0.55);
   leg->AddEntry(hTotalCharge, Form("All Charge on Target %.2f C", sum0), "lf");
-  //leg->AddEntry(hGoodCharge, Form("Good charge after cuts %.2f C, Goal = %d C", sum1,goal), "lf");
   leg->AddEntry(hGoodCharge, Form("Good charge after cuts %.2f C", sum1), "lf");
+  //leg->AddEntry(hTotalCharge, Form("All Q %.2f C", sum0), "lf");
+  //leg->AddEntry(hGoodCharge, Form("Good Q %.2f C", sum1), "lf");
   leg->AddEntry(hNoDataShift, Form("Shifts with no data (%i)",nEmpties));
+
+
+
   //leg->AddEntry(lineCurrent, Form("Last %d weeks, %.2f C/shift, %.2f C projected", n_weeks, line->GetParameter(1), (final_epoch-current_epoch)*(line->GetParameter(1))+sum1), "lf");
   //leg->AddEntry(lineFuture, Form("Future rate of %.2f C/shift needed to hit goal",needed_slope));
   leg->Draw("same");
 
   cDrawChargeMon->Print("charge_mon_time_noint.pdf");
+  cDrawChargeMon->SaveAs("charge_mon_time_noint.png");
 
 }

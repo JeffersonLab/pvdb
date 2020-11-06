@@ -165,7 +165,8 @@ def get_info_all():
 
         if run_type is None or run_type not in ['Production']:
             pass_cut = False
-        if target_type is None or '48Ca' not in target_type:
+        if ((target_type is None or '48Ca' not in target_type) and run.number>5000) and ((target_type is None or 'Pb' not in target_type) and run.number < 5000):
+        #if target_type is None or '48Ca' not in target_type:
           if run.get_condition_value("slug") < 3999:
             pass_cut = False
 
@@ -250,6 +251,7 @@ def get_info_all():
             dd[runno]["eff_time"] = prompt_time
             dd[runno]["start_time"] = start_time
             dd[runno]["end_time"] = end_time
+            dd[runno]["epoch_time_start"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
             dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(end_time, " %Y-%m-%d %H:%M:%S").timetuple())
             if dd[runno]["epoch_time"] > 2000000000.0:
               dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
@@ -260,7 +262,13 @@ def get_info_all():
             dd[runno]["charge_good"] = "0"
             dd[runno]["start_time"] = run.start_time
             dd[runno]["end_time"] = run.start_time
+            #dd[runno]["epoch_time_start"] = run.start_time #0
+            #dd[runno]["epoch_time"] = run.start_time #0
+            dd[runno]["epoch_time_start"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
             dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
+            #print runno, " failed RCDB"
+            #dd[runno]["epoch_time_start"] = time.mktime(datetime.datetime.strptime(run.start_time, " %Y-%m-%d %H:%M:%S").timetuple())
+            #dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(run.start_time, " %Y-%m-%d %H:%M:%S").timetuple())
 
         # Sum over all production runs (with 208Pb target)
         charge_sum += float(charge1)
@@ -274,7 +282,7 @@ def get_info_all():
             ngood += 1
             good_sum += float(dd[runno]["charge_good"])
 
-        print >> fout, runno, dd[runno]["end_time"], dd[runno]["epoch_time"], dd[runno]["charge_all"], dd[runno]["charge_good"]
+        print >> fout, runno, dd[runno]["end_time"], dd[runno]["epoch_time_start"], dd[runno]["epoch_time"], dd[runno]["charge_all"], dd[runno]["charge_good"]
 
     print
     print ("Total runs: %d,\t\tTotal charge sum: %.2f C" %(nrun, float(charge_sum)*1.e-6))

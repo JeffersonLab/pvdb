@@ -8,8 +8,8 @@ void DrawChargeMon()
   string date, time;
   double charge0, charge1;
 
-  TH1F* hsum = new TH1F("hsum", "Charge total vs run", 2300, 5400+0.5,7550+0.5);
-  TH1F* hsum1 = new TH1F("hsum1", "Good charge total vs run", 2300, 5400+0.5, 7550+0.5);
+  TH1F* hsum = new TH1F("hsum", "Charge total vs run", 6600, 3000+0.5,9550+0.5);
+  TH1F* hsum1 = new TH1F("hsum1", "Good charge total vs run", 6600, 3000+0.5, 9550+0.5);
 
   // for debugging/sanity check
   auto tg = new TGraph();
@@ -103,5 +103,5 @@ void DrawChargeMon()
   leg->Draw("same");
 
   c2->Print("charge_mon.pdf");
-
+  c2->SaveAs("charge.png");
 }

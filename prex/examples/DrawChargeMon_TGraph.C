@@ -20,7 +20,7 @@ void DrawChargeMon_TGraph() {
   gStyle->SetStatBorderSize(0);
 
   // use th1 as frame for tgraph
-  TH1F *h = new TH1F("hframe","Charge Tracking;;Accumulated Charge (C)",50, 0, 1.15e7); 
+  TH1F *h = new TH1F("hframe","Charge Tracking;;Accumulated Charge (C)",50, 0, 2*1.35e7); 
   TDatime da(2019,12,04,12,00,00); //is the first day of crex; 
   h->GetXaxis()->SetTimeDisplay(1);
   h->GetXaxis()->SetTimeFormat("%b %d");
@@ -31,15 +31,28 @@ void DrawChargeMon_TGraph() {
 
   string runnumber, date, time;
   double tot_raw=0, tot_cut=0;
-  double timestamp, raw, good; 
+  double timestamp_start, timestamp, raw, good; 
   TTimeStamp timestamp0(2019,12,04,12,00,00,0,0,0); 
   int start = timestamp0.GetSec(); 
-  TTimeStamp timestamp1(2020,04,04,12,00,00,0,0,0); 
+  //TTimeStamp timestamp1(2020,04,20,12,00,00,0,0,0); 
+  // Summer break -> Sept 21
+  TTimeStamp timestamp1(2020,09,21,12,00,00,0,0,0); 
   int end = timestamp1.GetSec(); 
+
+  TTimeStamp timestampSummerStart(2020,03,26,03,00,00,0,0,0); 
+  int Sstart = timestampSummerStart.GetSec(); 
+  TTimeStamp timestampSummerEnd(2020,08,05,12,00,00,0,0,0); 
+  int Send = timestampSummerEnd.GetSec(); 
 
   // read in the charge file 
   ifstream infile("out_time.txt"); 
-  while(infile>>runnumber>>date>>time>>timestamp>>raw>>good){
+  while(infile>>runnumber>>date>>time>>timestamp_start>>timestamp>>raw>>good){
+  // COVID Summer
+  //  if (timestamp > Sstart) {
+  //    timestamp_start = timestamp_start - (Send-Sstart);
+  //    timestamp = timestamp - (Send-Sstart);
+  //  }
+
     tot_raw+=raw; 
     tot_cut+=good; 
     gh_raw->SetPoint(gh_raw->GetN(), timestamp - start, tot_raw/1e6); 
@@ -62,7 +75,8 @@ void DrawChargeMon_TGraph() {
 
   // goal is drawn as star
   TGraph *goal = new TGraph();
-  goal->SetPoint(0, end-start, 460); // is 460C precise?
+  //goal->SetPoint(0, end-start, 460); // is 460C precise?
+  goal->SetPoint(0, end-start, 467);
   goal->SetMarkerStyle(29); 
   goal->SetMarkerSize(2);
   goal->SetMarkerColor(kRed); 
