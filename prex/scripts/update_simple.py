@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 from datetime import datetime
@@ -5,7 +6,9 @@ from datetime import datetime
 import rcdb
 from rcdb.provider import RCDBProvider
 
-TESTMODE=True
+from parity_rcdb import ParityConditions
+
+TESTMODE=False
 
 def main():
     
@@ -27,9 +30,9 @@ def main():
             cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE).stdout.read().strip()
             value = cond_out.split()[2]
             if int(value) == 2:
-                flip = 'RIGHT'
+                flip = 'FLIP-RIGHT'
             elif int(value) == 3:
-                flip = 'LEFT'
+                flip = 'FLIP-LEFT'
             else:
                 print "flip state value sometime else....", value, " skip this run", run.number
                 continue
@@ -37,7 +40,8 @@ def main():
             if TESTMODE:
                 print run.number, value
             else:
-                db.add_condition(run, ParityConditions.FLIPSTATE, flip, True)
+                print run.number, flip
+                db.add_condition(run, ParityConditions.FLIP_STATE, flip, True)
         except Exception as e:
             print e
 

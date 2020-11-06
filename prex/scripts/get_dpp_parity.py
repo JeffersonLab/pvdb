@@ -27,9 +27,36 @@ def get_dpp_run(run_num):
         return
 
     dpp, sig_dpp = get_dpp(brtime, ertime)
+    """
     print "Start: ", brtime
     print "End: ", ertime
     print "get_dpp_run: ", dpp, sig_dpp
+    """
+    return dpp, sig_dpp
+
+def get_p(brtime, ertime):
+    mean = None
+    stdev = None
+
+    try:
+        # Adjust condition range as needed from "-r", "min:max" ..
+        cmds = ["myStats", "-b", brtime, "-e", ertime, "-c", "HALLA:p", "-r", "1000:3000", "-l", "HALLA:p"]
+        cond_out = subprocess.Popen(cmds, stdout=subprocess.PIPE)                            
+        for line in cond_out.stdout:
+            if "HALLA:p" in line:
+                value1 = line.strip().split()[2]
+                value2 = line.strip().split()[4]
+                if value1 == "N/A":
+                    mean = 0
+                else:
+                    mean = value1
+                if value2 == "N/A":
+                    stdev = 0
+                else:
+                    stdev = value2                    
+    except Exception as e:
+        print >> sys.stderr, "Exception: %s" % str(e)
+    return mean, stdev
 
 def get_dpp(brtime, ertime):
     mean = None

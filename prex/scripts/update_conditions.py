@@ -53,9 +53,9 @@ def update_conditions(input_data):
     with open('%s' % input_data, 'rb') as f:
         for line in f:
             #parse data
-           run_num = line.split(None,2)[0]
-           condition_name = line.split(None,2)[1]
-           value = line.split(None,2)[2]
+           run_num = (line.split(None,2)[0]).rstrip()
+           condition_name = (line.split(None,2)[1]).rstrip()
+           value = (line.split(None,2)[2]).rstrip()
 
            if not run_num.isdigit():
                log.warn(Lf("ERROR: wrong format, run should be number! Your input: '{}'", run_num))

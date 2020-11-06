@@ -24,7 +24,18 @@ def update_slug():
     #slug number
     slug=sys.argv[2]
 
-    print "Update SLUGNUMBER for run ", runs
+    print "Update SLUGNUMBER for run ", runs, " to SLUG = ", slug
+    """
+    Ask user to enter Y or N (case-insensitive).
+    :return: True if the answer is Y.
+    :rtype: bool
+    """
+    answer = ""
+    while answer not in ["y", "n"]:
+        answer = raw_input("OK to continue [Y/N]? ").lower()
+    print answer
+    if answer != "y":
+        return
 
     if TESTMODE:
         for runno in range(int(brun), int(erun)+1):
