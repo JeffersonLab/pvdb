@@ -33,6 +33,8 @@ class ParityConditions(object):
     RESPIN_COMMENT = 'respin_comment'
     DPP = "dpp"
     DPP_STDEV = "dpp_stdev"
+    ENERGY_AVG = "energy_avg"
+    ENERGY_SIG = "energy_sig"
 
 def create_condition_types(db):
     """
@@ -78,3 +80,5 @@ def create_condition_types(db):
     create_condition_type(ParityConditions.RESPIN_COMMENT, ConditionType.STRING_FIELD, "comment from respin analysis")
     create_condition_type(ParityConditions.DPP, ConditionType.FLOAT_FIELD, "Average dp/p")
     create_condition_type(ParityConditions.DPP_STDEV, ConditionType.FLOAT_FIELD, "sigma of dp/p")
+    create_condition_type(ParityConditions.ENERGY_AVG, ConditionType.FLOAT_FIELD, "run average of Tiefenbach beam energy when beam on")
+    create_condition_type(ParityConditions.ENERGY_SIG, ConditionType.FLOAT_FIELD, "sigma of energy_avg, MeV")
