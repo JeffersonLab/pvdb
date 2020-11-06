@@ -258,14 +258,22 @@ def get_info_all():
 
         else:
             #print runno, run_type, target_type, run_flag
+            start_time = " "+run.start_time.__str__()
+            end_time = " "+run.start_time.__str__()
             dd[runno]["charge_all"] = "0"
             dd[runno]["charge_good"] = "0"
             dd[runno]["start_time"] = run.start_time
             dd[runno]["end_time"] = run.start_time
             #dd[runno]["epoch_time_start"] = run.start_time #0
             #dd[runno]["epoch_time"] = run.start_time #0
-            dd[runno]["epoch_time_start"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
-            dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
+            if runno < "5000" and runno is not "5000":
+              #dd[runno]["epoch_time_start"] = run.start_time #0
+              #dd[runno]["epoch_time"] = run.start_time #0
+              dd[runno]["epoch_time_start"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
+              dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
+            else: 
+              dd[runno]["epoch_time_start"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
+              dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(start_time, " %Y-%m-%d %H:%M:%S").timetuple())
             #print runno, " failed RCDB"
             #dd[runno]["epoch_time_start"] = time.mktime(datetime.datetime.strptime(run.start_time, " %Y-%m-%d %H:%M:%S").timetuple())
             #dd[runno]["epoch_time"] = time.mktime(datetime.datetime.strptime(run.start_time, " %Y-%m-%d %H:%M:%S").timetuple())

@@ -22,7 +22,7 @@ void DrawChargeMon_projected(Int_t exptID = 2)
   Int_t startTime = 1575435600; // CREX
   Int_t endTime = 0;
   if (exptID == 1) {
-    startTime = 1562284800; // PREX II
+    startTime = 1562284800 + 6*24*3600; // PREX II
   }
   Int_t startTimeDST = startTime-3600;
 
@@ -35,7 +35,7 @@ void DrawChargeMon_projected(Int_t exptID = 2)
   //Double_t final_epoch = 876-SumBreakLen; // or do = last_epoch+1; // 366 = April 4, 372 = April 6, 414 = April 20, 888 = Sept 21
   Double_t final_epoch = 878-SumBreakLen; // or do = last_epoch+1; // 366 = April 4, 372 = April 6, 414 = April 20, 888 = Sept 21
   if (exptID == 1) {
-    final_epoch = 500; // PREX II - what is this?
+    final_epoch = 200; // PREX II - what is this?
     SumBreakStart = 99999;
   }
   Double_t total_epoch = final_epoch+15; // or do = last_epoch+1+15; 
@@ -92,12 +92,12 @@ void DrawChargeMon_projected(Int_t exptID = 2)
     {
       first_epoch = epoch;
       Printf("First Epoch, UNIX Time: %f, run = %d",first_epoch,run);
-      epoch = (-1*1575435600.0 + epoch)/(1.0*nSecs);// + offset;
+      epoch = (-1*startTime + epoch)/(1.0*nSecs);// + offset;
       first_epoch = epoch;
       Printf("First Epoch, Shift Time: %f",first_epoch);
     }
-    epoch_start = (-1*1575435600.0 + epoch_start)/(1.0*nSecs);// + offset;
-    epoch = (-1*1575435600.0 + epoch)/(1.0*nSecs);// + offset;
+    epoch_start = (-1*startTime + epoch_start)/(1.0*nSecs);// + offset;
+    epoch = (-1*startTime + epoch)/(1.0*nSecs);// + offset;
 
     // Summer break: 
     if (epoch > SumBreakStart && epoch < SumBreakStop) { continue ; }
